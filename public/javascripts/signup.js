@@ -20,16 +20,21 @@ $('#passwordConfirmedEntry').on('change', () => {
 });
 
 $('#signUpButton').on('click', async () => {
-  const email = $('#emailEntry').val();
-  const password = $('#passwordEntry').val();
+  const userEntry = {
+    email: $('#emailEntry').val(),
+    password: $('#passwordEntry').val(),
+  };
 
-  const response = await fetch('/api/signup', {
-    method: 'POST',
-    body: new URLSearchParams({
-      email: email,
-      password: password,
-    }),
+  const response = await axios.post('/api/signup', {
+    email: userEntry.email,
+    password: userEntry.password,
   });
 
-  console.log(response);
+  if (response.data.success) {
+    setTimeout(() => {
+      window.location = 'login.html';
+    }, 1000);
+  } else {
+    window.alert(response.data.msg);
+  }
 });
