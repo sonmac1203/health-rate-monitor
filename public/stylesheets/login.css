@@ -1,0 +1,30 @@
+body {
+  margin: 0
+}
+
+header {
+  text-align: center;
+}
+
+main {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.container {
+  height: 350px;
+  width: 350px;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+input[type=email], input[type=password] {
+  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+}

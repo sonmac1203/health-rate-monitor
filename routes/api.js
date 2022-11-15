@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../schemas/user');
+const jwt = require('jwt-simple');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post('/signUp', (req, res) => {
+router.post('/signup', (req, res) => {
   const email = req.body.email;
   const password = req.body.email;
 
@@ -25,7 +26,7 @@ router.post('/signUp', (req, res) => {
     } else {
       res.status(201).json({
         success: true,
-        message: 'HIHI',
+        message: 'Account has been created!',
       });
     }
   });
