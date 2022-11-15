@@ -5,34 +5,40 @@
   <script src="javascripts/jquery-3.2.1.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="javascripts/login.js" defer></script>
-  <title>Heart Rate Monitoring | Login</title>
+  <title>HRM | Login</title>
   <body>
     <main>
       <div class="container">
-        <header>Login</header>
-        <div class="inputField">
-          <label for="email"><b>Email</b></label>
-          <input
-            id="emailEntry"
-            type="email"
-            placeholder="Enter Email"
-            name="email"
-            required
-          />
+        <header><h1>Login to HRM</h1></header>
+
+        <div>
+          <div class="inputField">
+            <!-- <label for="email" class="inputLabel"><b>Email</b></label> -->
+            <input
+              id="emailEntry"
+              type="email"
+              name="email"
+              required
+              placeholder="Email"
+            />
+          </div>
+
+          <div class="inputField">
+            <!-- <label for="password" class="inputLabel"><b>Password</b></label> -->
+            <input
+              id="passwordEntry"
+              type="password"
+              name="password"
+              required
+              placeholder="Password"
+            />
+          </div>
+          <button type="submit" id="btnLogIn">Login</button>
         </div>
 
-        <div class="inputField">
-          <label for="password"><b>Password</b></label>
-          <input
-            id="passwordEntry"
-            type="password"
-            placeholder="Enter Password"
-            name="password"
-            required
-          />
-        </div>
-        <button type="submit" id="btnLogIn">Login</button>
-        <p>Don't have an account? <a href="/signup.html">Sign up</a></p>
+        <p class="noAccount">
+          Don't have an account? <a href="/signup.html">Sign up</a>
+        </p>
       </div>
     </main>
   </body>

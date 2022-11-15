@@ -2,6 +2,7 @@
 <html lang="en">
   <meta charset="UTF-8" />
   <link href="stylesheets/login.css" rel="stylesheet" />
+  <link href="stylesheets/signup.css" rel="stylesheet" />
   <script src="javascripts/jquery-3.2.1.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="javascripts/signup.js" defer></script>
@@ -9,43 +10,45 @@
   <body>
     <main>
       <div class="container">
-        <header>Sign up</header>
+        <header><h1>Sign up</h1></header>
         <div class="inputField">
-          <label for="email"><b>Email</b></label>
+          <!-- <label for="email"><b>Email</b></label> -->
           <input
             id="emailEntry"
             type="email"
-            placeholder="Enter Email"
+            placeholder="Email"
             name="email"
             required
           />
-          <p id="emailAlert"></p>
+          <!-- <p id="emailAlert"></p> -->
         </div>
 
         <div class="inputField">
-          <label for="password"><b>Password</b></label>
+          <!-- <label for="password"><b>Password</b></label> -->
           <input
             id="passwordEntry"
             type="password"
-            placeholder="Enter Password"
+            placeholder="Password"
             name="password"
             required
           />
         </div>
 
         <div class="inputField">
-          <label for="passwordConfirmed"><b>Confirm password</b></label>
+          <!-- <label for="passwordConfirmed"><b>Confirm password</b></label> -->
           <input
             id="passwordConfirmedEntry"
             type="password"
-            placeholder="Enter Password"
+            placeholder="Confirm password"
             name="passwordConfirmed"
             required
           />
-          <p id="passwordAlert"></p>
+          <!-- <p id="passwordAlert"></p> -->
         </div>
         <button type="submit" id="signUpButton">Sign up</button>
-        <p>Already had an account? <a href="/login.html">Log in</a></p>
+        <p class="noAccount">
+          Already had an account? <a href="/login.html">Log in</a>
+        </p>
       </div>
     </main>
   </body>
