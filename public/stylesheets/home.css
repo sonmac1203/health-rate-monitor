@@ -1,0 +1,74 @@
+.banner {
+  margin-top: 6rem;
+  margin-bottom: 6rem;
+  align-items: center;
+}
+
+.banner-title-container {
+  flex: 0 0 50%;
+}
+
+.banner-title {
+  font-size: 2.8rem;
+  margin: 0;
+}
+
+.banner-subtitle {
+  margin: 0;
+}
+
+.banner .banner-img-container {
+  flex: 0 0 50%;
+}
+
+.banner .banner-img-container .banner-img {
+  width: 100%;
+}
+
+.banner .banner-description-container {
+  width: 70%;
+}
+
+.banner .banner-description-container .banner-description {
+  font-size: 20px;
+}
+
+.banner-button-container {
+  display: flex;
+  gap: 10px
+}
+
+.banner .banner-button {
+  padding: 10px 20px 10px 20px;
+}
+
+.team-introduction {
+  margin-top: 7rem;
+  margin-bottom: auto;
+}
+
+.team-introduction .team-introduction-col {
+  flex: 0 0 33.3333333%;
+}
+
+.team-introduction-col .team-introduction-card {
+  background-color: white;
+  border-radius: 5px;
+}
+
+.team-introduction-col:nth-child(1) .team-introduction-card {
+  margin-right: var(--laptop-card-gap);
+}
+
+.team-introduction-col:nth-child(2) .team-introduction-card {
+  margin-right: var(--laptop-card-gap);
+  margin-left: var(--laptop-card-gap);
+}
+
+.team-introduction-col:nth-child(3) .team-introduction-card {
+  margin-left: var(--laptop-card-gap);
+}
+
+.team-introduction-card-title {
+  margin: 0;
+}
