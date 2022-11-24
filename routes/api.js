@@ -81,7 +81,7 @@ router.get('/auth', function (req, res) {
     const decoded = jwt.decode(token, secret);
     User.findOne(
       { email: decoded.email },
-      ['email', 'lastAccess', 'devices'],
+      ['email', 'lastAccess', 'devices', 'devices_added'],
       (err, user) => {
         if (err) {
           res.status(400).json({
@@ -108,6 +108,7 @@ router.post('/add_new_device', function (req, res) {
   }
 
   const deviceObj = {
+    device_name: req.body.deviceName || '',
     device_id: req.body.deviceID,
   };
 
@@ -117,10 +118,12 @@ router.post('/add_new_device', function (req, res) {
       email: req.body.email,
     },
     {
+      $inc: { devices_added: 1 },
       $push: {
         devices: deviceObj,
       },
     },
+
     (error, success) => {
       if (error) {
         res.status(400).json({
