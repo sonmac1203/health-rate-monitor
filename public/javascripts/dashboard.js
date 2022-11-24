@@ -10,10 +10,11 @@ $(() => {
   const lastAccessDisplay = $('.profile-summary-card-info-time');
 
   // device summary
-  const deviceList = $('.device-summary-card-device-list');
+  const deviceRows = $('.device-summary-card-table tbody');
 
   // buttons and inputs
-  const addNewDeviceInputField = $('#new-device-id-input');
+  const addNewDeviceIdInputField = $('#new-device-id-input');
+  const addNewDeviceNameInputField = $('#new-device-name-input');
   const addNewDeviceButton = $('#add-new-device-button');
 
   var response;
@@ -29,6 +30,7 @@ $(() => {
 
     const email = response.data.user.email;
     const lastAccess = response.data.user.lastAccess;
+    const devicesAdded = response.data.user.devices_added;
     const devices = response.data.user.devices;
 
     devices.sort((a, b) => {
@@ -39,24 +41,30 @@ $(() => {
     lastAccessDisplay.text(lastAccess);
 
     for (const device of devices) {
-      const $item = $('<div>', {
-        class: 'device-summary-card-device-item',
-        text: `ID: ${device.device_id}`,
+      const $itemRow = $('<tr>');
+      const $nameData = $('<td>', {
+        text: device.device_name || `device_${devicesAdded}`,
       });
-      deviceList.append($item);
+      const $idData = $('<td>', {
+        text: device.device_id,
+      });
+      $itemRow.append([$nameData, $idData]);
+      deviceRows.append($itemRow);
     }
 
     addNewDeviceButton.click(() => {
-      const deviceID = addNewDeviceInputField.val();
-      addNewDevice(deviceID, email);
+      const deviceID = addNewDeviceIdInputField.val();
+      const deviceName = addNewDeviceNameInputField.val();
+      addNewDevice(deviceName, deviceID, email);
     });
   })();
 });
 
-async function addNewDevice(id, email) {
+async function addNewDevice(name, id, email) {
   const response = await axios.post('/api/add_new_device', {
     email: email,
     deviceID: id,
+    deviceName: name,
   });
   if (response.data.success) {
     window.alert(response.data.message);

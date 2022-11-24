@@ -1,0 +1,46 @@
+/* Section */
+section.pills-section {
+  margin-top: 3rem;
+}
+
+/* Columns */
+.setting-pill-col {
+  flex: 0 0 40%;
+}
+.device-info-pill-col {
+  flex: 0 0 30%
+}
+.view-mode-pill-col {
+  flex: 0 0 30%;
+}
+
+/* Pills */
+.setting-pill, .device-info-pill, .view-mode-pill {
+  background-color: white;
+  border-radius: 8px;
+  height: 3rem;
+  padding: 10px 20px 10px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.setting-pill {
+  margin-right: 10px;
+  justify-content: space-between;
+}
+
+.setting-pill i {
+  margin-right: 10px;
+}
+
+.device-info-pill {
+  margin-left: 10px;
+  margin-right: 10px;
+  gap: 10px
+}
+
+.view-mode-pill {
+  margin-left: 10px;
+  gap: 10px;
+  justify-content: space-between;
+}

@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta charset="UTF-8" />
-  <link href="stylesheets/index.css" rel="stylesheet" />
-  <link href="stylesheets/dashboard.css" rel="stylesheet" />
-  <script src="javascripts/jquery-3.2.1.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="javascripts/dashboard.js" defer></script>
-  <title>Heart Rate Monitoring | Dashboard</title>
+  <head>
+    <meta charset="UTF-8" />
+    <link href="stylesheets/index.css" rel="stylesheet" />
+    <link href="stylesheets/profile.css" rel="stylesheet" />
+    <link href="stylesheets/visualization.css" rel="stylesheet" />
+    <script src="javascripts/jquery-3.2.1.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="javascripts/dashboard.js" defer></script>
+    <title>Heart Rate Monitoring | Dashboard</title>
+    <script
+      src="https://kit.fontawesome.com/ead8c78b5a.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
   <body>
     <header>
       <div>HRM</div>
@@ -19,7 +26,7 @@
       <div class="container">
         <section class="row profile-section">
           <div class="profile-summary-col">
-            <div class="profile-summary-card">
+            <div class="profile-summary-card shadow">
               <div class="profile-summary-card-avatar-container">
                 <img
                   src="https://www.w3schools.com/howto/img_avatar.png"
@@ -36,26 +43,67 @@
             </div>
           </div>
           <div class="device-summary-col">
-            <div class="device-summary-card">
-              <div class="device-summary-card-device-list-container">
-                <h5 class="device-summary-card-label">Devices</h5>
-                <div class="device-summary-card-device-list"></div>
-              </div>
+            <div class="device-summary-card shadow">
               <div class="device-summary-card-add-new-device-container">
-                <div class="device-summary-card-add-new-device-input-container">
-                  <input
-                    type="text"
-                    id="new-device-id-input"
-                    name="device-id"
-                    placeholder="Enter device ID"
-                  />
-                  <button id="add-new-device-button">Register</button>
-                </div>
+                <input
+                  type="text"
+                  id="new-device-name-input"
+                  name="device-name"
+                  placeholder="Enter device name"
+                />
+                <input
+                  type="text"
+                  id="new-device-id-input"
+                  name="device-id"
+                  placeholder="Enter device ID"
+                />
+                <button id="add-new-device-button">ADD</button>
+              </div>
+              <table class="device-summary-card-dummy-table">
+                <tr>
+                  <th class="device-summary-card-dummy-name-col">NAME</th>
+                  <th class="device-summary-card-dummy-id-col">ID</th>
+                </tr>
+              </table>
+              <div class="device-summary-card-table-container">
+                <table class="device-summary-card-table">
+                  <tbody></tbody>
+                </table>
               </div>
             </div>
           </div>
         </section>
-        <section class="data-vis-section"></section>
+        <section class="pills-section row">
+          <div class="setting-pill-col">
+            <div class="setting-pill shadow">
+              <div class="setting-pill-frequency">
+                <i class="fa-solid fa-wave-square"></i>
+                30 mins
+              </div>
+              <div class="setting-pill-start-time">
+                <i class="fa-solid fa-hourglass-start"></i>
+                6:00 AM
+              </div>
+              <div class="setting-pill-end-time">
+                <i class="fa-solid fa-hourglass-end"></i>
+                10:00 PM
+              </div>
+            </div>
+          </div>
+          <div class="device-info-pill-col">
+            <div class="device-info-pill shadow">
+              <i class="fa-solid fa-microchip"></i>
+              1234567
+            </div>
+          </div>
+          <div class="view-mode-pill-col">
+            <div class="view-mode-pill shadow">
+              <i class="fa-solid fa-calendar-week"></i>
+              Weekly (Nov 17 - Nov 24)
+              <i class="fa-solid fa-caret-down"></i>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
     <footer>Created by team XX - 2022</footer>
