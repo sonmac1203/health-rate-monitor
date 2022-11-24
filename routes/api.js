@@ -79,23 +79,61 @@ router.get('/auth', function (req, res) {
   const token = req.headers['x-auth'];
   try {
     const decoded = jwt.decode(token, secret);
-    // Send back email and last access
-    User.find({ email: decoded.email }, 'email lastAccess', (err, users) => {
-      if (err) {
-        res.status(400).json({
-          success: false,
-          message: 'Error contacting DB. Please contact support.',
-        });
-      } else {
-        res.status(200).json({
-          success: true,
-          users: users,
-        });
+    User.findOne(
+      { email: decoded.email },
+      ['email', 'lastAccess', 'devices'],
+      (err, user) => {
+        if (err) {
+          res.status(400).json({
+            success: false,
+            message: 'Error contacting DB. Please contact support.',
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            user: user,
+          });
+        }
       }
-    });
+    );
   } catch (ex) {
     res.status(401).json({ success: false, message: 'Invalid JWT' });
   }
+});
+
+router.post('/add_new_device', function (req, res) {
+  if (!req.body.email || !req.body.deviceID) {
+    res.status(401).json({ error: 'Missing email and/or device ID' });
+    return;
+  }
+
+  const deviceObj = {
+    device_id: req.body.deviceID,
+  };
+
+  // Get user from the database
+  User.findOneAndUpdate(
+    {
+      email: req.body.email,
+    },
+    {
+      $push: {
+        devices: deviceObj,
+      },
+    },
+    (error, success) => {
+      if (error) {
+        res.status(400).json({
+          success: false,
+          message: 'Cannot add the new device.',
+        });
+      } else {
+        res
+          .status(201)
+          .json({ success: true, message: 'Device has been added.' });
+      }
+    }
+  );
 });
 
 module.exports = router;
