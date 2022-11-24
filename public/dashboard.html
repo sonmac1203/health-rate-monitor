@@ -1,17 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
   <meta charset="UTF-8" />
-  <!-- <link href="stylesheets/info.css" rel="stylesheet" /> -->
+  <link href="stylesheets/index.css" rel="stylesheet" />
+  <link href="stylesheets/dashboard.css" rel="stylesheet" />
   <script src="javascripts/jquery-3.2.1.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="javascripts/dashboard.js" defer></script>
   <title>Heart Rate Monitoring | Dashboard</title>
   <body>
     <header>
-      <h1>Hi this is the dashboard</h1>
-      <div>
-        <button id="btnLogOut">LogOut</button>
-      </div>
+      <div>HRM</div>
+      <nav>
+        <a href="/index.html">Home</a>
+        <a href="/dashboard.html">Dashboard</a>
+      </nav>
     </header>
+    <main>
+      <div class="container">
+        <section class="row profile-section">
+          <div class="profile-summary-col">
+            <div class="profile-summary-card">
+              <div class="profile-summary-card-avatar-container">
+                <img
+                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  alt="Italian Trulli"
+                  class="profile-summary-card-avatar"
+                />
+              </div>
+              <div class="profile-summary-card-info-container">
+                <div class="profile-summary-card-info-name">Son Mac</div>
+                <div class="profile-summary-card-info-email"></div>
+                <div class="profile-summary-card-info-time"></div>
+                <button id="btnLogOut">Log out</button>
+              </div>
+            </div>
+          </div>
+          <div class="device-summary-col">
+            <div class="device-summary-card">
+              <div class="device-summary-card-device-list-container">
+                <h5 class="device-summary-card-label">Devices</h5>
+                <div class="device-summary-card-device-list"></div>
+              </div>
+              <div class="device-summary-card-add-new-device-container">
+                <div class="device-summary-card-add-new-device-input-container">
+                  <input
+                    type="text"
+                    id="new-device-id-input"
+                    name="device-id"
+                    placeholder="Enter device ID"
+                  />
+                  <button id="add-new-device-button">Register</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="data-vis-section"></section>
+      </div>
+    </main>
+    <footer>Created by team XX - 2022</footer>
   </body>
 </html>

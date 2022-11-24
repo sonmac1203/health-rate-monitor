@@ -1,0 +1,117 @@
+.profile-section {
+  margin-top: 3rem;
+}
+
+section.profile-section .profile-summary-col {
+  flex: 0 0 40%;
+}
+
+section.profile-section .device-summary-col {
+  flex: 0 0 60%;
+}
+
+.profile-summary-card, .device-summary-card {
+  height: 20rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+}
+
+.profile-summary-card {
+  border-radius: 8px;
+  background-color: white;
+  margin-right: 10px;
+  padding: 30px;
+}
+
+.profile-summary-card-avatar-container {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-summary-card-avatar {
+  height: 5rem;
+  border-radius: 50%;
+}
+
+.profile-summary-card-info-container {
+  flex-grow: 1;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.profile-summary-card-info-name {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.device-summary-card {
+  margin-left: 10px;
+}
+
+.device-summary-card-add-new-device-container,  .device-summary-card-device-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.device-summary-card-device-list-container {
+  background-color: white;
+  flex: 0 0 80%;
+  overflow: hidden;
+}
+
+.device-summary-card-add-new-device-container {
+  flex: 0 0 15%;
+}
+
+.device-summary-card-add-new-device-input-container {
+  height: 100%;
+  display: flex;
+  gap: 10px
+}
+
+.device-summary-card-add-new-device-container button {
+  margin-left: auto;
+}
+
+.device-summary-card-add-new-device-container input {
+  width: 100%;
+  height: 100%;
+}
+
+.device-summary-card-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  font-size: 15px;
+  margin-left: 25px;
+  flex: 0 0 15%;
+}
+
+.device-summary-card-device-list {
+  flex: 0 0 85%;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--main-bg-color);
+  overflow: auto;
+}
+
+.device-summary-card-device-item {
+  padding: 12px 25px 12px 25px;
+  background-color: white;
+  border-top: 1px solid var(--main-bg-color);
+  font-size: 15px;
+}
+
+.device-summary-card-device-item:first-child {
+  border: none;
+}
+
+.device-summary-card-device-item:last-child {
+  border-bottom: 1px solid var(--main-bg-color);
+}
+ 
