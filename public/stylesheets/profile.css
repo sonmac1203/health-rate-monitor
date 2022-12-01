@@ -12,39 +12,63 @@ section.profile-section .device-summary-col {
 }
 
 /* Styles of the 2 cards */
-.profile-summary-card, .device-summary-card {
+.profile-summary-card, .device-summary-card, .account-summary-card {
   height: 20rem;
   display: flex;
   flex-direction: column;
-  gap: 5%;
+  justify-content: space-between;
   background-color: white;
   border-radius: 8px;
 }
 
-/* Style for profile-summary-card*/
+/* Style for profile-summary-card */
 .profile-summary-card {
-  padding: 30px;
+  padding: 20px 60px 20px 60px;
   margin-right: 10px;
 }
 .profile-summary-card-avatar-container {
+  flex: 0 0 30%;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid lightgray;
 }
 .profile-summary-card-avatar {
-  height: 5rem;
+  height: 2.5rem;
   border-radius: 50%;
 }
 .profile-summary-card-info-container {
-  flex-grow: 1;
+  flex: 0 0 50%;
   display: flex;
-  gap: 10px;
+  gap: 5px;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  border-bottom: 1px solid lightgray;
 }
 .profile-summary-card-info-name {
   font-weight: bold;
   font-size: 1.5rem;
+}
+
+.navigation-tab-active {
+  background-color: lightgray;
+}
+
+.profile-summary-card-navigation-tab {
+  display: flex;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.profile-summary-card-navigation-tab i {
+  width: 30px;
+}
+
+.profile-summary-card-sign-out-button {
+  flex: 0 0 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Style for device-summary-card */
@@ -112,4 +136,48 @@ th:first-child, td:first-child {
 th:last-child, td:last-child {
   width: 82%;
 }
+
+/* Account summary */
+.account-summary-card {
+  padding: 20px 40px 20px 40px;
+  margin-left: 10px;
+}
+.account-summary-card-username-container, .account-summary-card-email-container, .current-password, .new-password{
+  display: flex;
+  flex-direction: column;
+  gap: 3px
+}
+
+.account-summary-card-username-container input, .account-summary-card-email-container input, .account-summary-card-password-container input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid lightgray;
+}
+
+ .account-summary-card-password-container {
+  gap: 5%
+ }
+
+.account-summary-card-password-container .new-password, .account-summary-card-password-container .current-password {
+  flex: 0 0 47.5%;
+}
+
+.account-summary-card-password-container input {
+  width: 100%;
+}
+
+button.save-button {
+  padding: 8px;
+  border-radius: 8px;
+  width: 20%;
+  border: 1px solid lightgray;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.account-summary-card label {
+  font-size: 14px;
+}
+
+
  
