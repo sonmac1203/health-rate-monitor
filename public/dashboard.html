@@ -5,6 +5,7 @@
     <link href="stylesheets/index.css" rel="stylesheet" />
     <link href="stylesheets/profile.css" rel="stylesheet" />
     <link href="stylesheets/visualization.css" rel="stylesheet" />
+    <link href="stylesheets/setting.css" rel="stylesheet" />
     <script src="javascripts/jquery-3.2.1.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="javascripts/dashboard.js" defer></script>
@@ -24,7 +25,7 @@
     </header>
     <main>
       <div class="container">
-        <section class="row profile-section">
+        <section class="row profile-section" id="profile-section">
           <div class="profile-summary-col">
             <div class="profile-summary-card shadow">
               <div class="profile-summary-card-avatar-container">
@@ -33,17 +34,37 @@
                   alt="Italian Trulli"
                   class="profile-summary-card-avatar"
                 />
+                <div>
+                  <div><b>Son Mac</b></div>
+                  <div>sontmac1203@gmail.com</div>
+                </div>
               </div>
               <div class="profile-summary-card-info-container">
-                <div class="profile-summary-card-info-name">Son Mac</div>
-                <div class="profile-summary-card-info-email"></div>
-                <div class="profile-summary-card-info-time"></div>
-                <button id="btnLogOut">Log out</button>
+                <div
+                  class="profile-summary-card-navigation-tab navigation-tab-active"
+                >
+                  <i class="fa-solid fa-microchip"></i>
+                  Devices management
+                </div>
+                <div class="profile-summary-card-navigation-tab">
+                  <i class="fa-solid fa-person"></i>
+                  Public profile
+                </div>
+                <div class="profile-summary-card-navigation-tab">
+                  <i class="fa-solid fa-sliders"></i>
+                  Measurement settings
+                </div>
+              </div>
+              <div class="profile-summary-card-sign-out-button">
+                <div class="profile-summary-card-navigation-tab">
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  Sign out
+                </div>
               </div>
             </div>
           </div>
           <div class="device-summary-col">
-            <div class="device-summary-card shadow">
+            <div class="device-summary-card shadow hidden">
               <div class="device-summary-card-add-new-device-container">
                 <input
                   type="text"
@@ -71,9 +92,55 @@
                 </table>
               </div>
             </div>
+            <div class="account-summary-card shadow">
+              <div class="account-summary-card-username-container">
+                <label for="name"><b>Name</b></label>
+                <input
+                  type="text"
+                  placeholder="Son Mac"
+                  name="name"
+                  id="name"
+                  required
+                />
+              </div>
+              <div class="account-summary-card-email-container">
+                <label for="email"><b>Email</b></label>
+                <input
+                  type="text"
+                  placeholder="sontmac1203@gmail.com"
+                  name="email"
+                  id="email"
+                  disabled
+                />
+              </div>
+              <div class="account-summary-card-password-container row hidden">
+                <div class="current-password">
+                  <label for="email"><b>Current password</b></label>
+                  <input
+                    type="text"
+                    placeholder="Enter Email"
+                    name="email"
+                    id="email"
+                    required
+                  />
+                </div>
+                <div class="new-password">
+                  <label for="email"><b>New password</b></label>
+                  <input
+                    type="text"
+                    placeholder="Enter Email"
+                    name="email"
+                    id="email"
+                    required
+                  />
+                </div>
+              </div>
+              <button class="save-button">Save</button>
+            </div>
+            <div class="measurement-settings-card shadow"></div>
           </div>
         </section>
-        <section class="pills-section row">
+        <section class="pills-section row" id="pills-section">
           <div class="setting-pill-col">
             <div class="setting-pill shadow">
               <div class="setting-pill-frequency">
@@ -93,7 +160,7 @@
           <div class="device-info-pill-col">
             <div class="device-info-pill shadow">
               <i class="fa-solid fa-microchip"></i>
-              1234567
+              123456712345671234567333
             </div>
           </div>
           <div class="view-mode-pill-col">
@@ -103,6 +170,10 @@
               <i class="fa-solid fa-caret-down"></i>
             </div>
           </div>
+        </section>
+        <section class="row setting-section shadow" id="setting-section">
+          <div class="navigation-col"></div>
+          <div class="content-col"></div>
         </section>
       </div>
     </main>

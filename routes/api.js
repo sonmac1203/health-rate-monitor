@@ -139,4 +139,14 @@ router.post('/add_new_device', function (req, res) {
   );
 });
 
+router.post('/particle/report', function (req, res) {
+  const obj = req.body;
+
+  // Get user from the database
+  console.log(obj);
+
+  res.status(200).json(obj);
+  return;
+});
+
 module.exports = router;

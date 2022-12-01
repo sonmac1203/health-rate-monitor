@@ -88,4 +88,8 @@ header {
   margin-right: -50%;
 }
 
+.hidden {
+  display: none !important;
+}
+
 
