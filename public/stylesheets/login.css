@@ -31,7 +31,7 @@ label > b {
   font-weight: normal;
 }
 
-input[type=email], input[type=password] {
+input[type=email], input[type=password], input[type=text] {
   width: 100%;
   display: inline-block;
   box-sizing: border-box;

@@ -3,6 +3,7 @@ var router = express.Router();
 const User = require('../schemas/user');
 const jwt = require('jwt-simple');
 var bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 const secret = 'supersecret';
 
@@ -81,7 +82,7 @@ router.get('/auth', function (req, res) {
     const decoded = jwt.decode(token, secret);
     User.findOne(
       { email: decoded.email },
-      ['email', 'lastAccess', 'devices', 'devices_added'],
+      ['email', 'lastAccess', 'devices', 'devices_added', 'recent_settings'],
       (err, user) => {
         if (err) {
           res.status(400).json({
@@ -112,31 +113,48 @@ router.post('/add_new_device', function (req, res) {
     device_id: req.body.deviceID,
   };
 
-  // Get user from the database
-  User.findOneAndUpdate(
-    {
-      email: req.body.email,
-    },
-    {
-      $inc: { devices_added: 1 },
-      $push: {
-        devices: deviceObj,
-      },
-    },
+  const defaultSettings = {
+    frequency: 30,
+    start_time: 21600,
+    end_time: 79200,
+  };
 
-    (error, success) => {
-      if (error) {
-        res.status(400).json({
-          success: false,
-          message: 'Cannot add the new device.',
-        });
-      } else {
-        res
-          .status(201)
-          .json({ success: true, message: 'Device has been added.' });
+  try {
+    // Get user from the database
+    User.findOneAndUpdate(
+      {
+        email: req.body.email,
+      },
+      {
+        $inc: { devices_added: 1 },
+        $push: {
+          devices: deviceObj,
+        },
+      },
+
+      (error, success) => {
+        if (error) {
+          res.status(400).json({
+            success: false,
+            message: 'Cannot add the new device.',
+          });
+        } else {
+          res
+            .status(201)
+            .json({ success: true, message: 'Device has been added.' });
+        }
       }
-    }
-  );
+    );
+    // const particleRoute = 'https://api.particle.io/v1/devices';
+    // const responseFromParticle = axios.post(
+    //   `https://api.particle.io/v1/devices/${req.body.deviceID}/heart`
+    // );
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
+  }
 });
 
 router.post('/particle/report', function (req, res) {
@@ -147,6 +165,71 @@ router.post('/particle/report', function (req, res) {
 
   res.status(200).json(obj);
   return;
+});
+
+router.post('/update_measurement_settings', function (req, res) {
+  // const body = req.body;
+  // const deviceID = body.deviceID;
+  // const email = body.email;
+
+  const { email, deviceID, setting_name, frequency, start_time, end_time } =
+    req.body;
+
+  const updatingObject = {
+    ...(frequency.hasChanged && {
+      'devices.$.measurement_settings.frequency': frequency.value,
+    }),
+    ...(start_time.hasChanged && {
+      'devices.$.measurement_settings.start_time': start_time.value,
+    }),
+    ...(end_time.hasChanged && {
+      'devices.$.measurement_settings.end_time': end_time.value,
+    }),
+  };
+
+  const settings = {
+    setting_name: setting_name,
+    frequency: frequency.value,
+    start_time: start_time.value,
+    end_time: end_time.value,
+  };
+
+  try {
+    User.updateOne(
+      {
+        email: email,
+        'devices.device_id': deviceID,
+      },
+      {
+        $set: updatingObject,
+        $push: {
+          recent_settings: {
+            $each: [settings],
+            $slice: -3,
+          },
+        },
+      },
+      (error, success) => {
+        if (error) {
+          res.status(400).json({
+            success: false,
+            message: 'Cannot update the measurement settings.',
+          });
+        } else {
+          res.status(201).json({
+            success: true,
+            message:
+              'Measurement settings have been updated and the settings have been stored!',
+          });
+        }
+      }
+    );
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
+  }
 });
 
 module.exports = router;

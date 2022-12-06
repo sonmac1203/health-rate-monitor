@@ -42,15 +42,22 @@
               <div class="profile-summary-card-info-container">
                 <div
                   class="profile-summary-card-navigation-tab navigation-tab-active"
+                  id="device-summary-card-navigation-pill"
                 >
                   <i class="fa-solid fa-microchip"></i>
                   Devices management
                 </div>
-                <div class="profile-summary-card-navigation-tab">
+                <div
+                  class="profile-summary-card-navigation-tab"
+                  id="account-summary-card-navigation-pill"
+                >
                   <i class="fa-solid fa-person"></i>
                   Public profile
                 </div>
-                <div class="profile-summary-card-navigation-tab">
+                <div
+                  class="profile-summary-card-navigation-tab"
+                  id="measurement-settings-card-navigation-pill"
+                >
                   <i class="fa-solid fa-sliders"></i>
                   Measurement settings
                 </div>
@@ -58,13 +65,13 @@
               <div class="profile-summary-card-sign-out-button">
                 <div class="profile-summary-card-navigation-tab">
                   <i class="fa-solid fa-right-from-bracket"></i>
-                  Sign out
+                  <button id="btnLogOut">Sign out</button>
                 </div>
               </div>
             </div>
           </div>
           <div class="device-summary-col">
-            <div class="device-summary-card shadow hidden">
+            <div class="device-summary-card shadow" id="device-summary-card">
               <div class="device-summary-card-add-new-device-container">
                 <input
                   type="text"
@@ -92,33 +99,24 @@
                 </table>
               </div>
             </div>
-            <div class="account-summary-card shadow">
+            <div
+              class="account-summary-card shadow hidden"
+              id="account-summary-card"
+            >
               <div class="account-summary-card-username-container">
                 <label for="name"><b>Name</b></label>
-                <input
-                  type="text"
-                  placeholder="Son Mac"
-                  name="name"
-                  id="name"
-                  required
-                />
+                <input type="text" name="name" id="name" required />
               </div>
               <div class="account-summary-card-email-container">
                 <label for="email"><b>Email</b></label>
-                <input
-                  type="text"
-                  placeholder="sontmac1203@gmail.com"
-                  name="email"
-                  id="email"
-                  disabled
-                />
+                <input type="text" name="email" id="email" disabled />
               </div>
-              <div class="account-summary-card-password-container row hidden">
+              <div class="account-summary-card-password-container row">
                 <div class="current-password">
                   <label for="email"><b>Current password</b></label>
                   <input
                     type="text"
-                    placeholder="Enter Email"
+                    placeholder="Current password"
                     name="email"
                     id="email"
                     required
@@ -128,7 +126,7 @@
                   <label for="email"><b>New password</b></label>
                   <input
                     type="text"
-                    placeholder="Enter Email"
+                    placeholder="New password"
                     name="email"
                     id="email"
                     required
@@ -137,7 +135,79 @@
               </div>
               <button class="save-button">Save</button>
             </div>
-            <div class="measurement-settings-card shadow"></div>
+            <div
+              class="measurement-settings-card shadow hidden"
+              id="measurement-settings-card"
+            >
+              <div class="measurement-settings-adjustment">
+                <div class="measurement-settings-card-label">
+                  Current setting
+                  <input
+                    type="text"
+                    placeholder="Setting name"
+                    name="setting-name"
+                    id="setting-name"
+                  />
+                </div>
+                <div class="measurement-settings-card-frequency-container">
+                  <label for="measurement-frequency" class="setting-label"
+                    >Frequency</label
+                  >
+                  <div class="measurement-frequency-input-container">
+                    <input
+                      type="text"
+                      name="measurement-frequency"
+                      id="measurement-frequency"
+                      required
+                    />
+                    <span style="font-size: 12px">minutes</span>
+                  </div>
+                </div>
+                <div class="measurement-settings-card-time-container">
+                  <div class="measurement-settings-card-time-input">
+                    <label for="measurement-start" class="setting-label"
+                      >Starts at</label
+                    >
+                    <input
+                      type="time"
+                      name="measurement-start"
+                      id="measurement-start"
+                    />
+                  </div>
+                  <div class="measurement-settings-card-time-input">
+                    <label for="measurement-end" class="setting-label"
+                      >Ends at</label
+                    >
+                    <input
+                      type="time"
+                      name="measurement-end"
+                      id="measurement-end"
+                    />
+                  </div>
+                </div>
+                <div class="measurement-settings-card-device-input-container">
+                  <label for="measurement-chosen-device" class="setting-label"
+                    >Device</label
+                  >
+                  <select
+                    name="measurement-chosen-device"
+                    id="measurement-chosen-device"
+                  ></select>
+                </div>
+                <button id="measurement-settings-card-update-button">
+                  Update
+                </button>
+              </div>
+              <div class="measurement-settings-recent">
+                <div class="measurement-settings-card-label">
+                  Recent settings
+                </div>
+                <div
+                  class="measurement-setting-cards-container"
+                  id="measurement-setting-cards-container"
+                ></div>
+              </div>
+            </div>
           </div>
         </section>
         <section class="pills-section row" id="pills-section">
@@ -145,35 +215,36 @@
             <div class="setting-pill shadow">
               <div class="setting-pill-frequency">
                 <i class="fa-solid fa-wave-square"></i>
-                30 mins
               </div>
               <div class="setting-pill-start-time">
                 <i class="fa-solid fa-hourglass-start"></i>
-                6:00 AM
               </div>
               <div class="setting-pill-end-time">
                 <i class="fa-solid fa-hourglass-end"></i>
-                10:00 PM
               </div>
             </div>
           </div>
           <div class="device-info-pill-col">
             <div class="device-info-pill shadow">
               <i class="fa-solid fa-microchip"></i>
-              123456712345671234567333
             </div>
           </div>
           <div class="view-mode-pill-col">
             <div class="view-mode-pill shadow">
-              <i class="fa-solid fa-calendar-week"></i>
-              Weekly (Nov 17 - Nov 24)
-              <i class="fa-solid fa-caret-down"></i>
+              <div class="view-mode-change-flipper-container"></div>
+              <div class="view-mode-time-info-container">
+                <!-- <i class="fa-solid fa-caret-left"></i>
+                Weekly (Nov 17 - Nov 24)
+                <i class="fa-solid fa-caret-right"></i> -->
+                <input
+                  type="date"
+                  id="view-mode-time-date-picker"
+                  name="view-mode-time-date-picker"
+                  class="view-mode-time-date-picker"
+                />
+              </div>
             </div>
           </div>
-        </section>
-        <section class="row setting-section shadow" id="setting-section">
-          <div class="navigation-col"></div>
-          <div class="content-col"></div>
         </section>
       </div>
     </main>

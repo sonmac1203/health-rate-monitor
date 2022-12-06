@@ -40,7 +40,42 @@ section.pills-section {
 }
 
 .view-mode-pill {
+  padding: 0;
+
   margin-left: 10px;
-  gap: 10px;
   justify-content: space-between;
+  overflow: hidden;
+}
+
+.view-mode-pill .view-mode-change-flipper-container {
+  flex: 0 0 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main-bg-color);
+  cursor: pointer;
+}
+
+.view-mode-pill .view-mode-change-flipper-container:hover {
+  background-color: lightgray;
+}
+
+.view-mode-pill .view-mode-time-info-container {
+  flex: 0 0 80%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.view-mode-pill .view-mode-time-date-picker {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.view-mode-pill .view-mode-time-date-picker:focus-visible {
+  outline: none !important;
 }
