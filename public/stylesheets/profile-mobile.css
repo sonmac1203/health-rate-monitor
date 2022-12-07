@@ -1,0 +1,29 @@
+.mobile-profile-summary-card {
+  background-color: white;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.mobile-profile-summary-card.profile-summary-content-container {
+  border-bottom: none;
+}
+
+.mobile-profile-summary-card.profile-summary-content-container button {
+  margin-left: auto;
+}
+
+.left-col .mobile-navigation-list {
+  display: flex;
+  gap: 2%;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.mobile-navigation-list .mobile-navigation-chip {
+  flex: 0 0 32%;
+  background-color: white;
+  padding: 10px 20px 10px 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

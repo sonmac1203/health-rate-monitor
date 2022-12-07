@@ -5,9 +5,11 @@
 :root {
   --main-bg-color: #f3f2ef;
   --laptop-container-side-padding: 55px;
+  --tablet-container-side-padding: 20px;
   --laptop-header-padding: 1.5rem;
   --laptop-footer-padding: 1.5rem;
   --laptop-card-gap: 2rem;
+  --main-border-radius: 8px;
 }
 
 body {
@@ -40,23 +42,35 @@ main {
   flex-wrap: wrap;
 }
 
+.main-border-radius {
+  border-radius: var(--main-border-radius);
+}
+
 header {
   background-color: white;
   display: flex;
   justify-content: space-between;
   padding: var(--laptop-header-padding) var(--laptop-container-side-padding) var(--laptop-header-padding) var(--laptop-container-side-padding);
   width: 100%;
-  max-width: 72rem;
+  max-width: 80rem;
   margin: 0 auto;
 }
 
 .container {
   width: 100%;
-  max-width: 72rem;
+  max-width: 80rem;
   padding-left: var(--laptop-container-side-padding);
   padding-right: var(--laptop-container-side-padding);
   margin-left: auto;
   margin-right: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  .container, header {
+    padding-left: var(--tablet-container-side-padding);
+    padding-right: var(--tablet-container-side-padding);
+  }
+
 }
 
 
@@ -90,6 +104,10 @@ header {
 
 .hidden {
   display: none !important;
+}
+
+.navigation-chip-active {
+  background-color: lightgray !important;
 }
 
 

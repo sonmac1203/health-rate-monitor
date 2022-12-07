@@ -2,10 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
     <link href="stylesheets/index.css" rel="stylesheet" />
     <link href="stylesheets/profile.css" rel="stylesheet" />
+    <link href="stylesheets/profile-mobile.css" rel="stylesheet" />
     <link href="stylesheets/visualization.css" rel="stylesheet" />
-    <link href="stylesheets/setting.css" rel="stylesheet" />
     <script src="javascripts/jquery-3.2.1.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="javascripts/dashboard.js" defer></script>
@@ -26,211 +27,293 @@
     <main>
       <div class="container">
         <section class="row profile-section" id="profile-section">
-          <div class="profile-summary-col">
-            <div class="profile-summary-card shadow">
-              <div class="profile-summary-card-avatar-container">
+          <div class="left-col">
+            <div
+              class="mobile-profile-summary-card profile-summary-content-container shadow main-border-radius"
+            >
+              <img
+                src="https://www.w3schools.com/howto/img_avatar.png"
+                alt="Italian Trulli"
+                class="profile-summary-avatar"
+              />
+              <div>
+                <div><b>Son Mac</b></div>
+                <div>sontmac1203@gmail.com</div>
+              </div>
+              <button>Sign out</button>
+            </div>
+            <div class="mobile-navigation-list">
+              <div
+                class="mobile-navigation-chip shadow main-border-radius navigation-chip-active"
+                id="device-management-nav-chip-mobile"
+              >
+                <i class="fa-solid fa-microchip"></i>
+                Devices
+              </div>
+              <div
+                class="mobile-navigation-chip shadow main-border-radius"
+                id="profile-details-nav-chip-mobile"
+              >
+                <i class="fa-solid fa-address-card"></i>
+                Profile
+              </div>
+              <div
+                class="mobile-navigation-chip shadow main-border-radius"
+                id="measurement-settings-nav-chip-mobile"
+              >
+                <i class="fa-solid fa-sliders"></i>
+                Settings
+              </div>
+            </div>
+
+            <div class="profile-summary-and-nav-card shadow main-border-radius">
+              <div class="profile-summary-content-container">
                 <img
                   src="https://www.w3schools.com/howto/img_avatar.png"
                   alt="Italian Trulli"
-                  class="profile-summary-card-avatar"
+                  class="profile-summary-avatar"
                 />
                 <div>
                   <div><b>Son Mac</b></div>
-                  <div>sontmac1203@gmail.com</div>
+                  <span style="font-size: 12px">sontmac1203@gmail.com</span>
                 </div>
               </div>
-              <div class="profile-summary-card-info-container">
+              <div class="navigation-list">
                 <div
-                  class="profile-summary-card-navigation-tab navigation-tab-active"
-                  id="device-summary-card-navigation-pill"
+                  class="navigation-chip navigation-chip-active main-border-radius"
+                  id="device-management-nav-chip"
                 >
                   <i class="fa-solid fa-microchip"></i>
                   Devices management
                 </div>
                 <div
-                  class="profile-summary-card-navigation-tab"
-                  id="account-summary-card-navigation-pill"
+                  class="navigation-chip main-border-radius"
+                  id="profile-details-nav-chip"
                 >
                   <i class="fa-solid fa-person"></i>
                   Public profile
                 </div>
                 <div
-                  class="profile-summary-card-navigation-tab"
-                  id="measurement-settings-card-navigation-pill"
+                  class="navigation-chip main-border-radius"
+                  id="measurement-settings-nav-chip"
                 >
                   <i class="fa-solid fa-sliders"></i>
                   Measurement settings
                 </div>
               </div>
-              <div class="profile-summary-card-sign-out-button">
-                <div class="profile-summary-card-navigation-tab">
+              <div class="authentication-area">
+                <div class="navigation-chip">
                   <i class="fa-solid fa-right-from-bracket"></i>
-                  <button id="btnLogOut">Sign out</button>
+                  <button id="sign-out-button">Sign out</button>
                 </div>
               </div>
             </div>
           </div>
-          <div class="device-summary-col">
-            <div class="device-summary-card shadow" id="device-summary-card">
-              <div class="device-summary-card-add-new-device-container">
+          <div class="right-col">
+            <div
+              class="master-cards device-management-card shadow main-border-radius"
+              id="device-management-card"
+            >
+              <div class="device-management-card-add-new-device-container">
                 <input
                   type="text"
                   id="new-device-name-input"
                   name="device-name"
-                  placeholder="Enter device name"
+                  placeholder="Device name"
+                  class="main-border-radius"
                 />
                 <input
                   type="text"
                   id="new-device-id-input"
                   name="device-id"
-                  placeholder="Enter device ID"
+                  placeholder="Device ID"
                 />
-                <button id="add-new-device-button">ADD</button>
+                <button id="add-new-device-button" class="main-border-radius">
+                  ADD
+                </button>
               </div>
-              <table class="device-summary-card-dummy-table">
+              <table class="device-management-card-dummy-table">
                 <tr>
-                  <th class="device-summary-card-dummy-name-col">NAME</th>
-                  <th class="device-summary-card-dummy-id-col">ID</th>
+                  <th class="device-management-card-dummy-name-col">NAME</th>
+                  <th class="device-management-card-dummy-id-col">ID</th>
                 </tr>
               </table>
-              <div class="device-summary-card-table-container">
-                <table class="device-summary-card-table">
+              <div class="device-management-card-table-container">
+                <table class="device-management-card-table">
                   <tbody></tbody>
                 </table>
               </div>
             </div>
             <div
-              class="account-summary-card shadow hidden"
-              id="account-summary-card"
+              class="master-cards profile-details-card shadow main-border-radius hidden"
+              id="profile-details-card"
             >
-              <div class="account-summary-card-username-container">
-                <label for="name"><b>Name</b></label>
-                <input type="text" name="name" id="name" required />
+              <div class="profile-details-card-input-comnbo-container">
+                <label for="profile-details-card-username"><b>Name</b></label>
+                <input
+                  type="text"
+                  name="profile-details-card-username"
+                  id="profile-details-card-username"
+                  required
+                  class="main-border-radius"
+                />
               </div>
-              <div class="account-summary-card-email-container">
-                <label for="email"><b>Email</b></label>
-                <input type="text" name="email" id="email" disabled />
+              <div class="profile-details-card-input-comnbo-container">
+                <label for="profile-details-card-email"><b>Email</b></label>
+                <input
+                  type="text"
+                  name="profile-details-card-email"
+                  id="profile-details-card-email"
+                  disabled
+                  class="main-border-radius"
+                />
               </div>
-              <div class="account-summary-card-password-container row">
-                <div class="current-password">
-                  <label for="email"><b>Current password</b></label>
+              <div class="profile-details-card-password-change-container row">
+                <div class="profile-details-card-input-comnbo-container">
+                  <label for="profile-details-card-current-password"
+                    ><b>Current password</b></label
+                  >
                   <input
                     type="text"
                     placeholder="Current password"
-                    name="email"
-                    id="email"
+                    name="profile-details-card-current-password"
+                    id="profile-details-card-current-password"
                     required
+                    class="main-border-radius"
                   />
                 </div>
-                <div class="new-password">
-                  <label for="email"><b>New password</b></label>
+                <div class="profile-details-card-input-comnbo-container">
+                  <label for="profile-details-card-new-password"
+                    ><b>New password</b></label
+                  >
                   <input
                     type="text"
                     placeholder="New password"
-                    name="email"
-                    id="email"
+                    name="profile-details-card-new-password"
+                    id="profile-details-card-new-password"
                     required
+                    class="main-border-radius"
                   />
                 </div>
               </div>
-              <button class="save-button">Save</button>
+              <button
+                class="profile-details-card-save-button main-border-radius"
+                id="profile-details-card-save-button main-border-radius"
+              >
+                Save
+              </button>
             </div>
             <div
-              class="measurement-settings-card shadow hidden"
+              class="master-cards measurement-settings-card shadow hidden main-border-radius"
               id="measurement-settings-card"
             >
-              <div class="measurement-settings-adjustment">
-                <div class="measurement-settings-card-label">
-                  Current setting
+              <div class="measurement-settings-card-device-input-container">
+                <label for="measurement-settings-recent" class="setting-label"
+                  >Recent</label
+                >
+                <select
+                  name="measurement-settings-recent"
+                  id="measurement-settings-recent"
+                  class="main-border-radius"
+                >
+                  <option value="" disabled selected>
+                    Select recently added setting
+                  </option>
+                </select>
+              </div>
+              <div class="measurement-settings-two-elements-row row">
+                <div class="measurement-settings-input-combo-container">
+                  <label for="measurement-frequency" class="setting-label"
+                    >Name</label
+                  >
                   <input
                     type="text"
-                    placeholder="Setting name"
                     name="setting-name"
                     id="setting-name"
+                    placeholder="Setting #"
+                    class="main-border-radius"
                   />
                 </div>
-                <div class="measurement-settings-card-frequency-container">
+                <div class="measurement-settings-input-combo-container">
                   <label for="measurement-frequency" class="setting-label"
-                    >Frequency</label
+                    >Frequency (minutes)</label
                   >
-                  <div class="measurement-frequency-input-container">
-                    <input
-                      type="text"
-                      name="measurement-frequency"
-                      id="measurement-frequency"
-                      required
-                    />
-                    <span style="font-size: 12px">minutes</span>
-                  </div>
+                  <input
+                    type="text"
+                    name="measurement-frequency"
+                    id="measurement-frequency"
+                    required
+                    class="main-border-radius"
+                  />
                 </div>
-                <div class="measurement-settings-card-time-container">
-                  <div class="measurement-settings-card-time-input">
-                    <label for="measurement-start" class="setting-label"
-                      >Starts at</label
-                    >
-                    <input
-                      type="time"
-                      name="measurement-start"
-                      id="measurement-start"
-                    />
-                  </div>
-                  <div class="measurement-settings-card-time-input">
-                    <label for="measurement-end" class="setting-label"
-                      >Ends at</label
-                    >
-                    <input
-                      type="time"
-                      name="measurement-end"
-                      id="measurement-end"
-                    />
-                  </div>
-                </div>
-                <div class="measurement-settings-card-device-input-container">
-                  <label for="measurement-chosen-device" class="setting-label"
-                    >Device</label
+              </div>
+
+              <div class="measurement-settings-two-elements-row row">
+                <div class="measurement-settings-input-combo-container">
+                  <label for="measurement-start" class="setting-label"
+                    >Starts at</label
                   >
-                  <select
-                    name="measurement-chosen-device"
-                    id="measurement-chosen-device"
-                  ></select>
+                  <input
+                    type="time"
+                    name="measurement-start"
+                    id="measurement-start"
+                    class="main-border-radius"
+                  />
                 </div>
-                <button id="measurement-settings-card-update-button">
-                  Update
-                </button>
-              </div>
-              <div class="measurement-settings-recent">
-                <div class="measurement-settings-card-label">
-                  Recent settings
+                <div class="measurement-settings-input-combo-container">
+                  <label for="measurement-end" class="setting-label"
+                    >Ends at</label
+                  >
+                  <input
+                    type="time"
+                    name="measurement-end"
+                    id="measurement-end"
+                    class="main-border-radius"
+                  />
                 </div>
-                <div
-                  class="measurement-setting-cards-container"
-                  id="measurement-setting-cards-container"
-                ></div>
               </div>
+              <div class="measurement-settings-card-device-input-container">
+                <label for="measurement-chosen-device" class="setting-label"
+                  >Device</label
+                >
+                <select
+                  name="measurement-chosen-device"
+                  id="measurement-chosen-device"
+                  class="main-border-radius"
+                >
+                  <option value="" disabled selected>Select a device</option>
+                </select>
+              </div>
+              <button
+                id="measurement-settings-card-update-button"
+                class="main-border-radius"
+              >
+                Update
+              </button>
             </div>
           </div>
         </section>
         <section class="pills-section row" id="pills-section">
           <div class="setting-pill-col">
-            <div class="setting-pill shadow">
-              <div class="setting-pill-frequency">
+            <div class="setting-pill shadow main-border-radius">
+              <div class="setting-pill-frequency row setting-pill-content">
                 <i class="fa-solid fa-wave-square"></i>
               </div>
-              <div class="setting-pill-start-time">
+              <div class="setting-pill-start-time row setting-pill-content">
                 <i class="fa-solid fa-hourglass-start"></i>
               </div>
-              <div class="setting-pill-end-time">
+              <div class="setting-pill-end-time row setting-pill-content">
                 <i class="fa-solid fa-hourglass-end"></i>
               </div>
             </div>
           </div>
           <div class="device-info-pill-col">
-            <div class="device-info-pill shadow">
+            <div class="device-info-pill shadow main-border-radius">
               <i class="fa-solid fa-microchip"></i>
             </div>
           </div>
           <div class="view-mode-pill-col">
-            <div class="view-mode-pill shadow">
+            <div class="view-mode-pill shadow main-border-radius">
               <div class="view-mode-change-flipper-container"></div>
               <div class="view-mode-time-info-container">
                 <!-- <i class="fa-solid fa-caret-left"></i>

@@ -1,23 +1,44 @@
 /* Section */
 section.pills-section {
   margin-top: 3rem;
+  gap: 2%;
+}
+
+@media only screen and (max-width: 600px) {
+  section.pills-section {
+    margin-top: 20px !important;
+  }
+  .setting-pill-col {
+    display: none;
+  }
+  .device-info-pill-col {
+    flex: 0 0 49% !important;
+  }
+  .view-mode-pill-col {
+    flex: 0 0 49% !important;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .setting-pill-content {
+    font-size: 13px
+  }
 }
 
 /* Columns */
 .setting-pill-col {
-  flex: 0 0 40%;
+  flex: 0 0 39.2%;
 }
 .device-info-pill-col {
-  flex: 0 0 30%
+  flex: 0 0 28.4%
 }
 .view-mode-pill-col {
-  flex: 0 0 30%;
+  flex: 0 0 28.4%;
 }
 
 /* Pills */
 .setting-pill, .device-info-pill, .view-mode-pill {
   background-color: white;
-  border-radius: 8px;
   height: 3rem;
   padding: 10px 20px 10px 20px;
   display: flex;
@@ -25,24 +46,24 @@ section.pills-section {
 }
 
 .setting-pill {
-  margin-right: 10px;
+
   justify-content: space-between;
 }
 
-.setting-pill i {
-  margin-right: 10px;
+.setting-pill-content {
+  align-items: center;
+  gap: 10px
 }
 
 .device-info-pill {
-  margin-left: 10px;
-  margin-right: 10px;
+  /* margin-left: 10px;
+  margin-right: 10px; */
   gap: 10px
 }
 
 .view-mode-pill {
   padding: 0;
-
-  margin-left: 10px;
+  /* margin-left: 10px; */
   justify-content: space-between;
   overflow: hidden;
 }

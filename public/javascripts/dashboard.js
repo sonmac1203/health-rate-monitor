@@ -3,20 +3,20 @@ $(() => {
     window.location.replace('unauthorized.html');
   }
 
-  $('#btnLogOut').click(logout);
+  $('#sign-out-button').click(logout);
 
   // README: Define DOM elements belong to devices management card
   const devicesManagementCard = {
     newDeviceIdInputField: $('#new-device-id-input'),
     newDeviceNameInputField: $('#new-device-name-input'),
     addDeviceButton: $('#add-new-device-button'),
-    deviceRows: $('.device-summary-card-table tbody'),
+    deviceRows: $('.device-management-card-table tbody'),
   };
 
   // README: Define DOM elements belong to profile management card
-  const profileManagementCard = {
-    usernameField: $('.account-summary-card-username-container input'),
-    emailField: $('.account-summary-card-email-container input'),
+  const profileDetailsCard = {
+    usernameField: $('input#profile-details-card-username'),
+    emailField: $('input#profile-details-card-email'),
   };
 
   // README: Define DOM elements belong to measurement settings card
@@ -27,7 +27,7 @@ $(() => {
     endTimeInput: $('#measurement-end'),
     deviceSelect: $('#measurement-chosen-device'),
     updateButton: $('#measurement-settings-card-update-button'),
-    recentSettingsContainer: $('#measurement-setting-cards-container'),
+    recentSettingsSelect: $('#measurement-settings-recent'),
   };
 
   const pillsSection = {
@@ -92,7 +92,7 @@ $(() => {
     for (const device of devices) {
       const $itemRow = $('<tr>', {
         id: device.device_id,
-        class: `device-summary-card-row${
+        class: `device-management-card-row${
           favoriteDeviceID === device.device_id ? ' active-row' : ''
         }`,
       });
@@ -123,7 +123,7 @@ $(() => {
 
     // when a user clicks on a table row
     devicesManagementCard.deviceRows.on('click', 'tr', function () {
-      $('.device-summary-card-row').removeClass('active-row');
+      $('.device-management-card-row').removeClass('active-row');
       $('.icon-data-cell').remove();
       const $td = $('<td>', { class: 'icon-data-cell' }).append(
         $('<i>', {
@@ -142,8 +142,8 @@ $(() => {
      * README: Populate data for profile management card
      * by setting placeholder values for pre-defined input fields.
      */
-    profileManagementCard.usernameField.attr('placeholder', name || 'Son Mac');
-    profileManagementCard.emailField.attr('placeholder', email);
+    profileDetailsCard.usernameField.attr('placeholder', name || 'Son Mac');
+    profileDetailsCard.emailField.attr('placeholder', email);
 
     /*
      * README: Populate data for measurement settings card.
@@ -151,54 +151,18 @@ $(() => {
      * device list for displaying, if at least a device has
      * already been added.
      */
-
-    // Recent settings box
-    for (const {
-      setting_name,
-      frequency,
-      start_time,
-      end_time,
-    } of recent_settings) {
-      const $card = $('<div>', { class: 'recent-settings-card' });
-
-      const $titleAndButtonDiv = $('<div>', {
-        class: 'recent-settings-card-title-and-button',
+    for (let i = 0; i < recent_settings.length; i++) {
+      const { setting_name, frequency, start_time, end_time } =
+        recent_settings[i];
+      const text = `${setting_name}: freq of ${frequency} mins, starts at ${getConvertedTime(
+        start_time
+      )}, and ends at ${getConvertedTime(end_time)}`;
+      const $option = $('<option>', {
+        value: i,
+        id: i,
+        text: text,
       });
-      const $nameOfSettings = $('<div>').append(
-        $('<b>', { text: setting_name })
-      );
-      const $useButton = $('<div>', {
-        class: 'recent-settings-card-use-button',
-        text: 'Use',
-      });
-
-      $titleAndButtonDiv.append([$nameOfSettings, $useButton]);
-
-      const $settingDiv = $('<div>', {
-        class: 'recent-settings-card-setting',
-      });
-      const $frequencyDiv = $('<div>', {
-        class: 'recent-settings-card-pill',
-      }).append([
-        $('<i>', { class: 'fa-solid fa-wave-square' }),
-        $('<span>', { text: `${frequency} minutes` }),
-      ]);
-
-      const $startTimeDiv = $('<div>', {
-        class: 'recent-settings-card-pill',
-      }).append([
-        $('<i>', { class: 'fa-solid fa-hourglass-start' }),
-        $('<span>', { text: getConvertedTime(start_time) }),
-      ]);
-      const $endTimeDiv = $('<div>', {
-        class: 'recent-settings-card-pill',
-      }).append([
-        $('<i>', { class: 'fa-solid fa-wave-square' }),
-        $('<span>', { text: getConvertedTime(end_time) }),
-      ]);
-      $settingDiv.append([$frequencyDiv, $startTimeDiv, $endTimeDiv]);
-      $card.append([$titleAndButtonDiv, $settingDiv]);
-      measurementSettingsCard.recentSettingsContainer.append($card);
+      measurementSettingsCard.recentSettingsSelect.append($option);
     }
 
     // Define default values
@@ -376,40 +340,31 @@ $(() => {
   })();
 });
 
-const deviceSummaryProps = {
-  pill: $('#device-summary-card-navigation-pill'),
-  card: $('#device-summary-card'),
-};
+const navigationChips = $('.navigation-chip');
+const mobileNavigationChips = $('.mobile-navigation-chip');
+const masterCards = $('.master-cards');
 
-const accountSummaryProps = {
-  pill: $('#account-summary-card-navigation-pill'),
-  card: $('#account-summary-card'),
-};
+navigationChips.click(function () {
+  const chipId = $(this).attr('id');
+  const correspondingCard = $(`#${chipId.replace('nav-chip', 'card')}`);
+  navigationChips.removeClass('navigation-chip-active');
+  mobileNavigationChips.removeClass('navigation-chip-active');
+  $(this).addClass('navigation-chip-active');
+  $(`#${chipId}-mobile`).addClass('navigation-chip-active');
 
-const measurementSettingProps = {
-  pill: $('#measurement-settings-card-navigation-pill'),
-  card: $('#measurement-settings-card'),
-};
-
-deviceSummaryProps.pill.click(() => {
-  handleOnClickPill(deviceSummaryProps, [
-    accountSummaryProps,
-    measurementSettingProps,
-  ]);
+  masterCards.addClass('hidden');
+  correspondingCard.removeClass('hidden');
 });
 
-accountSummaryProps.pill.click(() => {
-  handleOnClickPill(accountSummaryProps, [
-    deviceSummaryProps,
-    measurementSettingProps,
-  ]);
-});
-
-measurementSettingProps.pill.click(() => {
-  handleOnClickPill(measurementSettingProps, [
-    deviceSummaryProps,
-    accountSummaryProps,
-  ]);
+mobileNavigationChips.click(function () {
+  const chipId = $(this).attr('id');
+  const correspondingCard = $(`#${chipId.replace('nav-chip-mobile', 'card')}`);
+  mobileNavigationChips.removeClass('navigation-chip-active');
+  navigationChips.removeClass('navigation-chip-active');
+  $(this).addClass('navigation-chip-active');
+  $(`#${chipId.replace('-mobile', '')}`).addClass('navigation-chip-active');
+  masterCards.addClass('hidden');
+  correspondingCard.removeClass('hidden');
 });
 
 async function addNewDevice(name, id, email) {
@@ -428,28 +383,6 @@ function logout() {
   localStorage.removeItem('token');
   window.location.replace('index.html');
 }
-
-const handleOnClickPill = (clickedProps, otherProps) => {
-  const { pill: chosenPill, card: chosenCard } = clickedProps;
-  const pillClassNames = chosenPill.attr('class').split(' ');
-  const activeClass = 'navigation-tab-active';
-
-  if (pillClassNames.includes(activeClass)) {
-    return;
-  }
-  for (const { pill, card } of otherProps) {
-    const pillClasses = pill.attr('class').split(' ');
-    const cardClasses = card.attr('class').split(' ');
-    if (pillClasses.includes(activeClass)) {
-      pill.removeClass(activeClass);
-    }
-    if (!cardClasses.includes('hidden')) {
-      card.addClass('hidden');
-    }
-  }
-  chosenCard.removeClass('hidden');
-  chosenPill.addClass(activeClass);
-};
 
 const getConvertedTime = (time) => {
   if (!time) {
