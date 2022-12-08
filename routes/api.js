@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../schemas/user');
+const ParticleDevice = require('../schemas/particleDevice');
 const jwt = require('jwt-simple');
 var bcrypt = require('bcryptjs');
 const axios = require('axios');
+const endOfDay = require('date-fns/endOfDay');
+const startOfDay = require('date-fns/startOfDay');
 
 const secret = 'supersecret';
 
@@ -69,7 +72,7 @@ router.post('/login', function (req, res) {
   });
 });
 
-router.get('/auth', function (req, res) {
+router.get('/auth_dashboard', function (req, res) {
   // See if the X-Auth header is set
   if (!req.headers['x-auth']) {
     return res
@@ -97,6 +100,35 @@ router.get('/auth', function (req, res) {
         }
       }
     );
+  } catch (ex) {
+    res.status(401).json({ success: false, message: 'Invalid JWT' });
+  }
+});
+
+router.get('/auth_home', function (req, res) {
+  // See if the X-Auth header is set
+  if (!req.headers['x-auth']) {
+    return res
+      .status(401)
+      .json({ success: false, msg: 'Missing X-Auth header' });
+  }
+  // X-Auth should contain the token
+  const token = req.headers['x-auth'];
+  try {
+    const decoded = jwt.decode(token, secret);
+    User.findOne({ email: decoded.email }, ['email'], (err, user) => {
+      if (err) {
+        res.status(400).json({
+          success: false,
+          message: 'Error contacting DB. Please contact support.',
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          user: user,
+        });
+      }
+    });
   } catch (ex) {
     res.status(401).json({ success: false, message: 'Invalid JWT' });
   }
@@ -157,21 +189,7 @@ router.post('/add_new_device', function (req, res) {
   }
 });
 
-router.post('/particle/report', function (req, res) {
-  const obj = req.body;
-
-  // Get user from the database
-  console.log(obj);
-
-  res.status(200).json(obj);
-  return;
-});
-
 router.post('/update_measurement_settings', function (req, res) {
-  // const body = req.body;
-  // const deviceID = body.deviceID;
-  // const email = body.email;
-
   const { email, deviceID, setting_name, frequency, start_time, end_time } =
     req.body;
 
@@ -220,6 +238,170 @@ router.post('/update_measurement_settings', function (req, res) {
             success: true,
             message:
               'Measurement settings have been updated and the settings have been stored!',
+          });
+        }
+      }
+    );
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
+  }
+});
+
+router.post('/particle/report', function (req, res) {
+  const { data, coreid: deviceID, published_at } = req.body;
+  const [heartRate, oxygenLevel] = data.split(',').map((d) => parseInt(d));
+
+  const report = {
+    stored_at: new Date(),
+    published_at: new Date(published_at),
+    data: {
+      heart_rate: heartRate,
+      oxygen_level: oxygenLevel,
+    },
+  };
+
+  try {
+    ParticleDevice.findOneAndUpdate(
+      { device_id: deviceID },
+      {
+        $push: {
+          reports: report,
+        },
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+      (err, doc) => {
+        if (err) {
+          res.status(401).json({ success: false, err: err });
+        } else {
+          res.status(201).json({
+            success: true,
+            message: 'The new report has been saved!',
+          });
+        }
+      }
+    );
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
+  }
+});
+
+router.get(
+  '/particle/device_report_daily/:deviceID/:date',
+  function (req, res) {
+    const { deviceID, date } = req.params;
+    try {
+      ParticleDevice.aggregate(
+        [
+          {
+            $match: {
+              device_id: deviceID,
+            },
+          },
+          {
+            $unwind: '$reports',
+          },
+          {
+            $match: {
+              'reports.published_at': {
+                $gte: new Date(new Date(date).setUTCHours(0, 0, 0, 0)),
+                $lte: new Date(new Date(date).setUTCHours(23, 59, 59, 999)),
+              },
+            },
+          },
+          {
+            $replaceRoot: {
+              newRoot: {
+                published_at: '$reports.published_at',
+                data: '$reports.data',
+              },
+            },
+          },
+        ],
+        (err, reports) => {
+          if (err) {
+            res.status(400).json({
+              success: false,
+              message: 'The date requested is invalid.',
+            });
+          } else {
+            res.status(201).json({
+              success: true,
+              message: 'The data for the requested date has been found.',
+              data: reports,
+            });
+          }
+        }
+      );
+    } catch (err) {
+      res.status(500).json({
+        success: false,
+        message: 'A database error has occured. Please try again',
+      });
+    }
+  }
+);
+
+router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
+  const { deviceID } = req.params;
+
+  const date = new Date();
+  const yesterday = new Date(date.setDate(date.getDate() - 1));
+  const lastWeek = new Date(
+    yesterday.getFullYear(),
+    yesterday.getMonth(),
+    yesterday.getDate() - 6
+  );
+  const upperBound = new Date(yesterday.setUTCHours(23, 59, 59, 999)); // last moment of the 'week'
+  const lowerBound = new Date(lastWeek.setUTCHours(0, 0, 0, 0)); // first moment of the 'week'
+
+  try {
+    ParticleDevice.aggregate(
+      [
+        {
+          $match: {
+            device_id: deviceID,
+          },
+        },
+        {
+          $unwind: '$reports',
+        },
+        {
+          $match: {
+            'reports.published_at': {
+              $gte: lowerBound,
+              $lte: upperBound,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            max_heart_rate: { $max: '$reports.data.heart_rate' },
+            min_heart_rate: { $min: '$reports.data.heart_rate' },
+            avg_heart_rate: { $avg: '$reports.data.heart_rate' },
+            max_oxygen_level: { $max: '$reports.data.oxygen_level' },
+            min_oxygen_level: { $min: '$reports.data.oxygen_level' },
+            avg_oxygen_level: { $avg: '$reports.data.oxygen_level' },
+          },
+        },
+      ],
+      (err, reports) => {
+        if (err) {
+          res.status(400).json({
+            success: false,
+            message: 'The date requested is invalid.',
+          });
+        } else {
+          res.status(201).json({
+            success: true,
+            message: 'The data for the requested date has been found.',
+            data: reports,
           });
         }
       }
