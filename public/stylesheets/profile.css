@@ -177,6 +177,9 @@ th:last-child, td:last-child {
 .device-management-card-row:hover {
   border-left: 3px solid var(--main-brand-color);
 }
+.device-management-card-row {
+  cursor: pointer;
+}
 .active-row {
   border-left: 3px solid var(--secondary-brand-color);
 }

@@ -72,7 +72,7 @@ router.post('/login', function (req, res) {
   });
 });
 
-router.get('/auth_dashboard', function (req, res) {
+router.get('/auth', function (req, res) {
   // See if the X-Auth header is set
   if (!req.headers['x-auth']) {
     return res
@@ -330,11 +330,18 @@ router.get(
               message: 'The date requested is invalid.',
             });
           } else {
-            res.status(201).json({
-              success: true,
-              message: 'The data for the requested date has been found.',
-              data: reports,
-            });
+            if (reports.length > 0) {
+              res.status(201).json({
+                success: true,
+                message: 'The data for the requested date has been found.',
+                data: reports,
+              });
+            } else {
+              res.status(404).json({
+                success: false,
+                message: 'The data for the requested date was not found.',
+              });
+            }
           }
         }
       );

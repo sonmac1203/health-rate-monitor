@@ -1,5 +1,13 @@
+import { getConvertedTime, getTimeInDatabaseFormat } from './utils.js';
+import { logout } from './authFunctions.js';
+
 $(() => {
-  $('.sign-out-button').click(logout);
+  if (!localStorage.getItem('token')) {
+    location.replace('unauthorized.html');
+    return;
+  }
+
+  $('.sign-out-button').on('click', logout);
 
   // README: Define DOM elements belong to devices management card
   const devicesManagementCard = {
@@ -31,20 +39,12 @@ $(() => {
     startTimeDivSettingPill: $('.setting-pill-start-time'),
     endTimeDivSettingPill: $('.setting-pill-end-time'),
     deviceInfoPill: $('.device-info-pill'),
-    viewModePill: $('.view-mode-pill'),
-    viewModePillFlipper: $('.view-mode-change-flipper-container'),
-    datePicker: $('#view-mode-time-date-picker'),
   };
-
-  // buttons and inputs
-  const addNewDeviceIdInputField = $('#new-device-id-input');
-  const addNewDeviceNameInputField = $('#new-device-name-input');
-  const addNewDeviceButton = $('#add-new-device-button');
 
   var response;
 
   (async () => {
-    response = await axios.get('/api/auth_dashboard', {
+    response = await axios.get('/api/auth', {
       headers: { 'x-auth': window.localStorage.getItem('token') },
     });
 
@@ -113,8 +113,8 @@ $(() => {
       devicesManagementCard.deviceRows.append($itemRow);
     }
     devicesManagementCard.addDeviceButton.click(() => {
-      const deviceID = addNewDeviceIdInputField.val();
-      const deviceName = addNewDeviceNameInputField.val();
+      const deviceID = devicesManagementCard.newDeviceIdInputField.val();
+      const deviceName = devicesManagementCard.addNewDeviceNameInputField.val();
       addNewDevice(deviceName, deviceID, email);
     });
 
@@ -271,6 +271,7 @@ $(() => {
      * As a device has been chosen and stored to localStorage,
      * show the data of that device
      */
+
     const pillsSectionData = {
       deviceID: favoriteDeviceID || '--',
       frequency:
@@ -284,9 +285,6 @@ $(() => {
         getConvertedTime(
           formattedDeviceList[favoriteDeviceID]?.measurement_settings.end_time
         ) || '-- : -- --',
-      weekViewText: `${getFormattedDate(
-        getLastWeeksDate()
-      )} - ${getFormattedDate(new Date())}`,
     };
 
     pillsSection.frequencyDivSettingsPill.append(
@@ -301,62 +299,7 @@ $(() => {
     pillsSection.deviceInfoPill.append(
       $('<span>', { text: pillsSectionData.deviceID })
     );
-
-    pillsSection.datePicker.attr('value', getTodayInTimeInputFormat());
-
-    const weekViewIcon = $('<i>', {
-      class: 'fa-solid fa-calendar-week',
-    });
-    const dateViewIcon = $('<i>', {
-      class: 'fa-solid fa-calendar-days',
-    });
-
-    const currentViewMode = localStorage.getItem('visualizationViewMode');
-    const viewIcon =
-      !currentViewMode || currentViewMode === 'weekly'
-        ? weekViewIcon
-        : dateViewIcon;
-    pillsSection.viewModePillFlipper.append(viewIcon);
-
-    pillsSection.viewModePillFlipper.on('click', function () {
-      const viewMode = localStorage.getItem('visualizationViewMode');
-      $(this).empty();
-      $(this).append(
-        !viewMode || viewMode === 'weekly' ? dateViewIcon : weekViewIcon
-      );
-      localStorage.setItem(
-        'visualizationViewMode',
-        !viewMode || viewMode === 'weekly' ? 'daily' : 'weekly'
-      );
-    });
   })();
-});
-
-const navigationChips = $('.navigation-chip');
-const mobileNavigationChips = $('.mobile-navigation-chip');
-const masterCards = $('.master-cards');
-
-navigationChips.click(function () {
-  const chipId = $(this).attr('id');
-  const correspondingCard = $(`#${chipId.replace('nav-chip', 'card')}`);
-  navigationChips.removeClass('navigation-chip-active');
-  mobileNavigationChips.removeClass('navigation-chip-active');
-  $(this).addClass('navigation-chip-active');
-  $(`#${chipId}-mobile`).addClass('navigation-chip-active');
-
-  masterCards.addClass('hidden');
-  correspondingCard.removeClass('hidden');
-});
-
-mobileNavigationChips.click(function () {
-  const chipId = $(this).attr('id');
-  const correspondingCard = $(`#${chipId.replace('nav-chip-mobile', 'card')}`);
-  mobileNavigationChips.removeClass('navigation-chip-active');
-  navigationChips.removeClass('navigation-chip-active');
-  $(this).addClass('navigation-chip-active');
-  $(`#${chipId.replace('-mobile', '')}`).addClass('navigation-chip-active');
-  masterCards.addClass('hidden');
-  correspondingCard.removeClass('hidden');
 });
 
 async function addNewDevice(name, id, email) {
@@ -371,23 +314,6 @@ async function addNewDevice(name, id, email) {
   }
 }
 
-function logout() {
-  localStorage.removeItem('token');
-  window.location.replace('index.html');
-}
-
-const getConvertedTime = (time) => {
-  if (!time) {
-    return '';
-  }
-  return new Date(time * 1000).toISOString().substring(11, 16);
-};
-
-const getTimeInDatabaseFormat = (time) => {
-  const [hour, minute] = time.split(':').map((i) => parseInt(i));
-  return hour * 3600 + minute * 60;
-};
-
 const changeDisplayValuesOfMeasurementSettingsInput = (
   frequencyInput,
   startTimeInput,
@@ -399,26 +325,3 @@ const changeDisplayValuesOfMeasurementSettingsInput = (
   startTimeInput.attr('value', getConvertedTime(start_time));
   endTimeInput.attr('value', getConvertedTime(end_time));
 };
-
-function getLastWeeksDate() {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-}
-
-function getFormattedDate(date) {
-  const month = date.toLocaleString('default', { month: 'short' });
-  const day = date.getDate();
-  return `${month} ${day}`;
-}
-
-function getTodayInTimeInputFormat() {
-  var date = new Date();
-  date.setDate(date.getDate() - 1); // convert to the day before
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
-  if (month < 10) month = '0' + month;
-  if (day < 10) day = '0' + day;
-  var today = year + '-' + month + '-' + day;
-  return today;
-}
