@@ -18,10 +18,27 @@
   </head>
   <body>
     <header>
-      <div>HRM</div>
-      <nav>
-        <a href="/index.html">Home</a>
-        <a href="/dashboard.html">Dashboard</a>
+      <a href="/index.html" class="header-logo-container">
+        <img
+          src="/images/pulses-low-resolution-logo-color-on-transparent-background.png"
+          alt="Logo"
+          class="header-logo"
+        />
+        <img
+          src="/images/pulses-website-favicon-color.png"
+          alt="Logo"
+          class="header-logo-small"
+        />
+      </a>
+      <nav class="header-middle-nav">
+        <a class="nav-link" href="/references.html">References</a>
+        <a class="nav-link" href="/dashboard.html">Dashboard</a>
+        <a class="nav-link" href="#how-to">How to</a>
+      </nav>
+      <nav class="header-right-nav">
+        <span class="nav-link sign-out-button" style="cursor: pointer"
+          >Log Out</span
+        >
       </nav>
     </header>
     <main>
@@ -40,7 +57,7 @@
                 <div><b>Son Mac</b></div>
                 <div>sontmac1203@gmail.com</div>
               </div>
-              <button>Sign out</button>
+              <button class="sign-out-button">Sign out</button>
             </div>
             <div class="mobile-navigation-list">
               <div
@@ -102,9 +119,9 @@
                 </div>
               </div>
               <div class="authentication-area">
-                <div class="navigation-chip">
+                <div class="navigation-chip main-border-radius">
                   <i class="fa-solid fa-right-from-bracket"></i>
-                  <button id="sign-out-button">Sign out</button>
+                  <span class="sign-out-button">Sign out</span>
                 </div>
               </div>
             </div>
@@ -127,8 +144,14 @@
                   id="new-device-id-input"
                   name="device-id"
                   placeholder="Device ID"
+                  class="main-border-radius"
                 />
-                <button id="add-new-device-button" class="main-border-radius">
+                <button
+                  id="add-new-device-button"
+                  class="main-border-radius"
+                  style="display: flex; gap: 5px; align-items: center"
+                >
+                  <i class="fa-solid fa-plus"></i>
                   ADD
                 </button>
               </div>

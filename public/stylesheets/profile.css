@@ -1,3 +1,7 @@
+body {
+  background-color: var(--main-bg-color);
+}
+
 /* Section style */
 .profile-section {
   margin-top: 3rem;
@@ -82,16 +86,19 @@ section.profile-section .right-col {
   font-size: 1.5rem;
 }
 
-.navigation-list .navigation-chip {
+.navigation-list .navigation-chip, .authentication-area .navigation-chip {
   display: flex;
   padding: 5px;
   cursor: pointer;
 }
 
 .navigation-list .navigation-chip:hover {
-  background-color: var(--main-bg-color);
+  background-color: var(--secondary-brand-color);
 }
-.navigation-list .navigation-chip i {
+.authentication-area .navigation-chip:hover {
+  background-color: lightgray;
+}
+.navigation-list .navigation-chip i, .authentication-area .navigation-chip i {
   width: 30px;
 }
 .authentication-area {
@@ -133,8 +140,13 @@ section.profile-section .right-col {
 .device-management-card-add-new-device-container button {
   margin-left: auto;
   padding: 10px 20px 10px;
-  border: 1px solid lightgray;
-  background-color: var(--main-bg-color);
+  border: none;
+  background-color: var(--secondary-brand-color);
+  cursor: pointer;
+  font-weight: bold;
+}
+.device-management-card-add-new-device-container button:hover {
+  filter: brightness(85%)
 }
 
 /* Tables */
@@ -152,7 +164,7 @@ tr {
 }
 .device-management-card-dummy-table th {
   text-align: left;
-  background: #f7f7f7;
+  background-color: var(--main-bg-color);
   border-bottom: 1px solid lightgray;
   border-top: 1px solid lightgray;
 }
@@ -163,10 +175,10 @@ th:last-child, td:last-child {
   width: 82%;
 }
 .device-management-card-row:hover {
-  border-left: 3px solid var(--main-bg-color);
+  border-left: 3px solid var(--main-brand-color);
 }
 .active-row {
-  border-left: 3px solid lightgray;
+  border-left: 3px solid var(--secondary-brand-color);
 }
 
 /* Profile details */

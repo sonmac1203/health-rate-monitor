@@ -1,9 +1,5 @@
 $(() => {
-  if (!window.localStorage.getItem('token')) {
-    window.location.replace('unauthorized.html');
-  }
-
-  $('#sign-out-button').click(logout);
+  $('.sign-out-button').click(logout);
 
   // README: Define DOM elements belong to devices management card
   const devicesManagementCard = {
@@ -37,6 +33,7 @@ $(() => {
     deviceInfoPill: $('.device-info-pill'),
     viewModePill: $('.view-mode-pill'),
     viewModePillFlipper: $('.view-mode-change-flipper-container'),
+    datePicker: $('#view-mode-time-date-picker'),
   };
 
   // buttons and inputs
@@ -47,7 +44,7 @@ $(() => {
   var response;
 
   (async () => {
-    response = await axios.get('/api/auth', {
+    response = await axios.get('/api/auth_dashboard', {
       headers: { 'x-auth': window.localStorage.getItem('token') },
     });
 
@@ -105,7 +102,7 @@ $(() => {
       const $iconData = $('<td>', { class: 'icon-data-cell' }).append(
         $('<i>', {
           class: 'fa-regular fa-square-check',
-          style: 'font-size: 15px',
+          style: 'font-size: 20px; color: var(--secondary-brand-color)',
         })
       );
       const rowData =
@@ -125,16 +122,9 @@ $(() => {
     devicesManagementCard.deviceRows.on('click', 'tr', function () {
       $('.device-management-card-row').removeClass('active-row');
       $('.icon-data-cell').remove();
-      const $td = $('<td>', { class: 'icon-data-cell' }).append(
-        $('<i>', {
-          class: 'fa-regular fa-square-check',
-          style: 'font-size: 15px',
-        })
-      );
       const deviceID = $(this).attr('id');
       localStorage.setItem('favoriteDeviceID', deviceID);
       $(this).addClass('active-row');
-      $(this).append($td);
       location.reload();
     });
 
@@ -312,6 +302,8 @@ $(() => {
       $('<span>', { text: pillsSectionData.deviceID })
     );
 
+    pillsSection.datePicker.attr('value', getTodayInTimeInputFormat());
+
     const weekViewIcon = $('<i>', {
       class: 'fa-solid fa-calendar-week',
     });
@@ -417,4 +409,16 @@ function getFormattedDate(date) {
   const month = date.toLocaleString('default', { month: 'short' });
   const day = date.getDate();
   return `${month} ${day}`;
+}
+
+function getTodayInTimeInputFormat() {
+  var date = new Date();
+  date.setDate(date.getDate() - 1); // convert to the day before
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+  if (month < 10) month = '0' + month;
+  if (day < 10) day = '0' + day;
+  var today = year + '-' + month + '-' + day;
+  return today;
 }

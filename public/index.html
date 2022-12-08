@@ -2,8 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
     <link href="stylesheets/index.css" rel="stylesheet" />
     <link href="stylesheets/home.css" rel="stylesheet" />
+    <script src="javascripts/jquery-3.2.1.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="javascripts/home.js" defer></script>
     <title>HRM | Home</title>
     <script
       src="https://kit.fontawesome.com/ead8c78b5a.js"
@@ -12,30 +16,53 @@
   </head>
   <body>
     <header>
-      <div>HRM</div>
-      <nav>
-        <a href="/index.html">Home</a>
-        <a href="/dashboard.html">Dashboard</a>
+      <a href="/index.html" class="header-logo-container">
+        <img
+          src="/images/pulses-low-resolution-logo-color-on-transparent-background.png"
+          alt="Logo"
+          class="header-logo"
+        />
+        <img
+          src="/images/pulses-website-favicon-color.png"
+          alt="Logo"
+          class="header-logo-small"
+        />
+      </a>
+      <nav class="header-middle-nav">
+        <a class="nav-link" href="/references.html">References</a>
+        <a class="nav-link" href="/dashboard.html">Dashboard</a>
+        <a class="nav-link" href="#how-to">How to</a>
       </nav>
+      <nav class="header-right-nav"></nav>
     </header>
     <main>
       <div class="container">
-        <div class="banner row">
+        <section class="banner row">
           <div class="banner-title-container">
-            <h2 class="banner-subtitle">ECE 413 Final Project</h2>
-            <h1 class="banner-title">Heart Rate Monitoring</h1>
+            <h2 class="banner-subtitle">ECE 413 - Web Dev & IoT</h2>
+            <h1 class="banner-title">Heart Rate Monitoring Project</h1>
             <div class="banner-description-container">
               <p class="banner-description">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Est
-                ultricies integer quis auctor. Eget sit amet tellus cras
-                adipiscing enim eu.
+                A low-cost application to monitor your heart rate and blood
+                oxygen saturation level on a daily basis. <br />Customize
+                settings and visualize your results with our user-oriented
+                dashboard.
               </p>
             </div>
             <div class="banner-button-container">
-              <button class="banner-button">References</button>
-              <button class="banner-button">
-                <a href="/login.html">Log in</a>
+              <button
+                class="banner-button main-border-radius shadow"
+                onclick="location.href='/signup.html'"
+              >
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Register</span>
+              </button>
+              <button
+                class="banner-button main-border-radius shadow"
+                onclick="location.href='/references.html'"
+              >
+                <i class="fa-solid fa-list"></i>
+                <span>References</span>
               </button>
             </div>
           </div>
@@ -43,32 +70,87 @@
             <img
               src="/images/banner.jpg"
               alt="Italian Trulli"
-              class="banner-img"
+              class="banner-img main-border-radius shadow"
             />
           </div>
-        </div>
-        <div class="team-introduction row">
-          <div class="team-introduction-col">
-            <div class="team-introduction-card">
-              <h4 class="team-introduction-card-title"><b>John Doe</b></h4>
-              <p>Architect & Engineer</p>
+        </section>
+        <section class="team-introduction-section">
+          <div class="team-introduction-title-container">
+            <h1>Who we are</h1>
+          </div>
+          <div class="team-members-container">
+            <div class="team-members-col">
+              <div class="team-members-card main-border-radius shadow">
+                <img
+                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  alt="Italian Trulli"
+                  class="team-members-avatar"
+                />
+                <div class="team-members-info">
+                  <h4 class="team-members-card-title"><b>Son Mac</b></h4>
+                  <span class="team-members-card-subtitle"
+                    >mactranthienson@arizona.edu</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="team-members-col">
+              <div class="team-members-card main-border-radius shadow">
+                <img
+                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  alt="Italian Trulli"
+                  class="team-members-avatar"
+                />
+                <div class="team-members-info">
+                  <h4 class="team-members-card-title">
+                    <b>Gerrick Rubalcava</b>
+                  </h4>
+                  <span class="team-members-card-subtitle"
+                    >gerrickrubalcava@arizona.edu</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="team-members-col">
+              <div class="team-members-card main-border-radius shadow">
+                <img
+                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  alt="Italian Trulli"
+                  class="team-members-avatar"
+                />
+                <div class="team-members-info">
+                  <h4 class="team-members-card-title"><b>Zach Shellouff</b></h4>
+                  <span class="team-members-card-subtitle"
+                    >shellouff@arizona.edu</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
-          <div class="team-introduction-col">
-            <div class="team-introduction-card">
-              <h4 class="team-introduction-card-title"><b>John Doe</b></h4>
-              <p>Architect & Engineer</p>
-            </div>
-          </div>
-          <div class="team-introduction-col">
-            <div class="team-introduction-card">
-              <h4 class="team-introduction-card-title"><b>John Doe</b></h4>
-              <p>Architect & Engineer</p>
-            </div>
-          </div>
-        </div>
+        </section>
       </div>
+      <section class="how-to" id="how-to">
+        <div class="container">
+          <div class="team-introduction-title-container">
+            <h1>How to use the dashboard?</h1>
+          </div>
+          <div class="how-to-photo-container">
+            <img
+              src="/images/banner.jpg"
+              alt="Italian Trulli"
+              class="how-to-photo main-border-radius"
+            />
+          </div>
+          <button
+            class="how-to-dashboard-button main-border-radius shadow"
+            onclick="location.href='/dashboard.html'"
+          >
+            <span>Dashboard</span>
+            <i class="fa-solid fa-circle-arrow-right"></i>
+          </button>
+        </div>
+      </section>
     </main>
-    <footer>Created by team XX - 2022</footer>
+    <footer>Created by team 20 - 2022</footer>
   </body>
 </html>
