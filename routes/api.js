@@ -337,7 +337,7 @@ router.get(
                 data: reports,
               });
             } else {
-              res.status(404).json({
+              res.status(201).json({
                 success: false,
                 message: 'The data for the requested date was not found.',
               });

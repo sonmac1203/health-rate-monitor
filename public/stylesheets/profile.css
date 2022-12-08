@@ -2,6 +2,12 @@ body {
   background-color: var(--main-bg-color);
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
 /* Section style */
 .profile-section {
   margin-top: 3rem;

@@ -1,6 +1,5 @@
 /* Section */
 section.pills-section {
-  margin-top: 3rem;
   gap: 2%;
 }
 
@@ -14,7 +13,7 @@ section.pills-section {
   .device-info-pill-col {
     flex: 0 0 49% !important;
   }
-  .view-mode-pill-col {
+  .date-picker-col {
     flex: 0 0 49% !important;
   }
 }
@@ -32,12 +31,12 @@ section.pills-section {
 .device-info-pill-col {
   flex: 0 0 28.4%
 }
-.view-mode-pill-col {
+.date-picker-col {
   flex: 0 0 28.4%;
 }
 
 /* Pills */
-.setting-pill, .device-info-pill, .view-mode-pill {
+.setting-pill, .device-info-pill, .date-picker-chip {
   background-color: white;
   height: 3rem;
   padding: 10px 20px 10px 20px;
@@ -56,19 +55,15 @@ section.pills-section {
 }
 
 .device-info-pill {
-  /* margin-left: 10px;
-  margin-right: 10px; */
   gap: 10px
 }
 
-.view-mode-pill {
-  padding: 0;
-  /* margin-left: 10px; */
-  justify-content: space-between;
+.date-picker-chip {
+  padding: 10px 20px 10px 20px;
   overflow: hidden;
 }
 
-.view-mode-pill .view-mode-change-flipper-container {
+/* .date-picker-chip .view-mode-flipper-container {
   flex: 0 0 20%;
   height: 100%;
   display: flex;
@@ -76,27 +71,50 @@ section.pills-section {
   align-items: center;
   background-color: var(--main-bg-color);
   cursor: pointer;
-}
+} */
 
-.view-mode-pill .view-mode-change-flipper-container:hover {
+/* .date-picker-chip .view-mode-flipper-container:hover {
   background-color: lightgray;
-}
+} */
 
-.view-mode-pill .view-mode-time-info-container {
+/* .date-picker-chip .view-mode-time-info-container {
   flex: 0 0 80%;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding-left: 10px;
   padding-right: 10px;
-}
+} */
 
-.view-mode-pill .view-mode-time-date-picker {
+.date-picker-chip input[type=date].view-mode-label {
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.view-mode-pill .view-mode-time-date-picker:focus-visible {
+.date-picker-chip input[type=date].view-mode-label:focus-visible {
   outline: none !important;
+}
+
+/* Charts */
+
+section.chart-section:last-child {
+  margin-bottom: 3rem;
+}
+
+.chart-section #my-daily-chart {
+  overflow: hidden;
+}
+
+.chart-section #my-weekly-chart {
+  overflow: hidden;
+}
+
+#my-weekly-chart, #my-daily-chart {
+  background-color: white;
+}
+
+.plot-container.plotly {
+  width: 100%;
+  height: 100%;
 }

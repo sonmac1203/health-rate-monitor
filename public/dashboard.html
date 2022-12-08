@@ -9,6 +9,7 @@
     <link href="stylesheets/visualization.css" rel="stylesheet" />
     <script src="javascripts/jquery-3.2.1.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
     <script type="module" src="javascripts/dashboard.js" defer></script>
     <script type="module" src="javascripts/dashboardNav.js" defer></script>
     <script type="module" src="javascripts/visualization.js" defer></script>
@@ -337,22 +338,22 @@
               <i class="fa-solid fa-microchip"></i>
             </div>
           </div>
-          <div class="view-mode-pill-col">
-            <div class="view-mode-pill shadow main-border-radius">
-              <div class="view-mode-change-flipper-container"></div>
-              <div class="view-mode-time-info-container">
-                <!-- <i class="fa-solid fa-caret-left"></i>
-                Weekly (Nov 17 - Nov 24)
-                <i class="fa-solid fa-caret-right"></i> -->
-                <!-- <input
-                  type="date"
-                  id="view-mode-time-date-picker"
-                  name="view-mode-time-date-picker"
-                  class="view-mode-time-date-picker"
-                /> -->
-              </div>
+          <div class="date-picker-col">
+            <div class="date-picker-chip shadow main-border-radius">
+              <input
+                type="date"
+                id="view-mode-date-picker"
+                name="view-mode-time-date-picker"
+                class="view-mode-label"
+              />
             </div>
           </div>
+        </section>
+        <section class="chart-section" id="chart-section">
+          <div id="my-weekly-chart" class="main-border-radius shadow"></div>
+        </section>
+        <section class="chart-section" id="daily-chart-section">
+          <div id="my-daily-chart" class="main-border-radius shadow"></div>
         </section>
       </div>
     </main>
