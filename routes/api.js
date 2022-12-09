@@ -107,7 +107,7 @@ router.get('/auth', function (req, res) {
         if (err) {
           res.status(400).json({
             success: false,
-            message: 'Error contacting DB. Please contact support.',
+            message: 'Cannot find the user. Please try again',
           });
         } else {
           res.status(200).json({
@@ -156,7 +156,7 @@ router.post('/update_access_token', function (req, res) {
       if (err) {
         res.status(400).send(err);
       } else if (!user) {
-        res.status(401).json({ error: 'Login failure!!' });
+        res.status(401).json({ error: 'Cannot find user. Please try again.' });
       } else {
         user.access_token = accessToken;
         user.save(() => {
@@ -286,7 +286,6 @@ router.post('/remove_device', function (req, res) {
     res.status(401).json({ error: 'Missing email and/or device ID' });
     return;
   }
-  console.log(req.body);
 
   try {
     User.updateOne(
@@ -396,7 +395,7 @@ router.post('/update_measurement_settings', function (req, res) {
               res.status(200).json({
                 success: false,
                 settings_sent: false,
-                device_added: true,
+                settings_updated: true,
                 message:
                   'Measurement settings have been updated but the settings have not been sent to device!',
               });
