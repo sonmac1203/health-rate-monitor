@@ -1,5 +1,16 @@
 import { getTodayInTimeInputFormat } from './utils.js';
 
+const sadFaceEmoji = $('<i>', {
+  class: 'fa-regular fa-face-frown',
+});
+const chartNotFoundText = $('<span>', {
+  text: 'Chart not found. Please try again!',
+});
+const chartNotFoundMessage = $('<div>', {
+  style:
+    'margin: 20px 0; display: flex; gap: 5px; align-items: center; justify-content: center',
+}).append([sadFaceEmoji, chartNotFoundText]);
+
 const requestDailyData = async (deviceID, date) => {
   const { data } = await axios.get(
     `/api/particle/device_report_daily/${deviceID}/${date}`
@@ -7,21 +18,30 @@ const requestDailyData = async (deviceID, date) => {
   return data;
 };
 
-const drawWeeklyChart = (heartRateData, oxygenLevelData) => {
-  const {
-    min: minHeartRate,
-    max: maxHeartRate,
-    avg: avgHeartRate,
-  } = heartRateData;
-  const {
-    min: minOxygenLevel,
-    max: maxOxygenLevel,
-    avg: avgOxygenLevel,
-  } = oxygenLevelData;
+const drawWeeklyChart = (data) => {
+  $('#my-weekly-chart').empty();
+  if (!data.success) {
+    $('#my-weekly-chart').append(chartNotFoundMessage);
+    $('#my-weekly-chart').addClass('shadow');
+    return;
+  }
+
+  const heartRateData = {
+    min: data.data[0].min_heart_rate,
+    max: data.data[0].max_heart_rate,
+    avg: data.data[0].avg_heart_rate,
+  };
+
+  const oxygenLevelData = {
+    min: data.data[0].min_oxygen_level,
+    max: data.data[0].max_oxygen_level,
+    avg: data.data[0].avg_oxygen_level,
+  };
+
   const xAxis = ['min', 'max', 'avg'];
   const heartRateTrace = {
     x: xAxis,
-    y: [minHeartRate, maxHeartRate, avgHeartRate],
+    y: [heartRateData.min, heartRateData.max, heartRateData.avg],
     name: 'Heart rate',
     type: 'bar',
     marker: {
@@ -30,7 +50,7 @@ const drawWeeklyChart = (heartRateData, oxygenLevelData) => {
   };
   const oxygenLevelTrace = {
     x: xAxis,
-    y: [minOxygenLevel, maxOxygenLevel, avgOxygenLevel],
+    y: [oxygenLevelData.min, oxygenLevelData.max, oxygenLevelData.avg],
     name: 'Oxygen Level',
     type: 'bar',
     marker: {
@@ -43,19 +63,25 @@ const drawWeeklyChart = (heartRateData, oxygenLevelData) => {
     showlegend: true,
     legend: { orientation: 'h' },
     title: {
-      text: 'THIS IS A TITLE',
+      text: 'Weekly summary',
     },
   };
   const chartConfig = { responsive: true };
   Plotly.newPlot('my-weekly-chart', chartData, chartLayout, chartConfig);
+  $('#my-weekly-chart').addClass('shadow');
 };
 
-const drawDailyChart = (reports) => {
-  console.log(reports);
+const drawDailyChart = (data, date) => {
+  $('#my-daily-chart').empty();
+  if (!data.success) {
+    $('#my-daily-chart').append(chartNotFoundMessage);
+    $('#my-daily-chart').addClass('shadow');
+    return;
+  }
+  const reports = data.data;
   const xAxis = reports.map((r) => r.published_at);
   const heartRateData = reports.map((r) => r.data.heart_rate);
   const oxygenLevelData = reports.map((r) => r.data.oxygen_level);
-
   const heartRateTrace = {
     x: xAxis,
     y: heartRateData,
@@ -80,12 +106,12 @@ const drawDailyChart = (reports) => {
     showlegend: true,
     legend: { orientation: 'h' },
     title: {
-      text: 'THIS IS A TITLE',
+      text: `Readings on ${date}`,
     },
   };
   const chartConfig = { responsive: true };
-
   Plotly.newPlot('my-daily-chart', chartData, chartLayout, chartConfig);
+  $('#my-daily-chart').addClass('shadow');
 };
 
 const datePicker = $('#view-mode-date-picker');
@@ -100,24 +126,8 @@ datePicker.on('change', async function () {
   const deviceID = localStorage.getItem('favoriteDeviceID');
   localStorage.setItem('liveDate', liveDate);
   const data = await requestDailyData(deviceID, liveDate);
-  $('#my-daily-chart').empty();
-  if (data.success) {
-    drawDailyChart(data.data);
-  } else {
-    $('#my-daily-chart').append(chartNotFoundMessage);
-  }
+  drawDailyChart(data, liveDate);
 });
-
-const sadFaceEmoji = $('<i>', {
-  class: 'fa-regular fa-face-frown',
-});
-const chartNotFoundText = $('<span>', {
-  text: 'Please choose a different date!',
-});
-const chartNotFoundMessage = $('<div>', {
-  style:
-    'margin: 20px 0; display: flex; gap: 5px; align-items: center; justify-content: center',
-}).append([sadFaceEmoji, chartNotFoundText]);
 
 $(() => {
   if (!localStorage.getItem('favoriteDeviceID')) {
@@ -128,28 +138,12 @@ $(() => {
     const { data } = await axios.get(
       `/api/particle/device_report_weekly/${deviceID}`
     );
-    const heartRateData = {
-      min: data.data[0].min_heart_rate,
-      max: data.data[0].max_heart_rate,
-      avg: data.data[0].avg_heart_rate,
-    };
-
-    const oxygenLevelData = {
-      min: data.data[0].min_oxygen_level,
-      max: data.data[0].max_oxygen_level,
-      avg: data.data[0].avg_oxygen_level,
-    };
-    drawWeeklyChart(heartRateData, oxygenLevelData);
+    drawWeeklyChart(data);
   })();
 
   const liveDate = datePicker.val();
   (async () => {
     const data = await requestDailyData(deviceID, liveDate);
-    $('#my-daily-chart').empty();
-    if (data.success) {
-      drawDailyChart(data.data);
-    } else {
-      $('#my-daily-chart').append(chartNotFoundMessage);
-    }
+    drawDailyChart(data, liveDate);
   })();
 });

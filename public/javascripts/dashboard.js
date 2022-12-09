@@ -11,9 +11,12 @@ $(() => {
 
   // README: Define DOM elements belong to devices management card
   const devicesManagementCard = {
+    accessTokenInputField: $('#access-token-input'),
     newDeviceIdInputField: $('#new-device-id-input'),
     newDeviceNameInputField: $('#new-device-name-input'),
+    addAccessTokenButton: $('#add-access-token-button'),
     addDeviceButton: $('#add-new-device-button'),
+    removeDeviceButton: $('#remove-device-button'),
     deviceRows: $('.device-management-card-table tbody'),
   };
 
@@ -38,7 +41,7 @@ $(() => {
     frequencyDivSettingsPill: $('.setting-pill-frequency'),
     startTimeDivSettingPill: $('.setting-pill-start-time'),
     endTimeDivSettingPill: $('.setting-pill-end-time'),
-    deviceInfoPill: $('.device-info-pill'),
+    refreshChip: $('.refresh-chip'),
   };
 
   var response;
@@ -56,6 +59,7 @@ $(() => {
     const {
       name,
       email,
+      access_token: accessToken,
       devices_added: devicesAdded,
       devices,
       recent_settings,
@@ -84,6 +88,32 @@ $(() => {
      * then construct a table row to add to the table.
      * An event handler for the add new device button is also added.
      */
+
+    if (accessToken.length === 0) {
+      devicesManagementCard.newDeviceIdInputField.attr('disabled', true);
+      devicesManagementCard.newDeviceNameInputField.attr('disabled', true);
+    } else {
+      devicesManagementCard.newDeviceIdInputField.attr('disabled', false);
+      devicesManagementCard.newDeviceNameInputField.attr('disabled', false);
+      devicesManagementCard.accessTokenInputField.attr('disabled', true);
+      devicesManagementCard.accessTokenInputField.val(accessToken);
+    }
+
+    devicesManagementCard.addAccessTokenButton.on('click', function () {
+      const accessToken = devicesManagementCard.accessTokenInputField.val();
+      console.log(accessToken);
+      console.log(email);
+      (async () => {
+        const { data } = await axios.post('/api/update_access_token', {
+          email: email,
+          accessToken: accessToken,
+        });
+        if (data.success) {
+          location.reload();
+        }
+      })();
+    });
+
     const favoriteDeviceID =
       window.localStorage.getItem('favoriteDeviceID') || '';
     for (const device of devices) {
@@ -113,9 +143,15 @@ $(() => {
       devicesManagementCard.deviceRows.append($itemRow);
     }
     devicesManagementCard.addDeviceButton.click(() => {
+      // add new device
       const deviceID = devicesManagementCard.newDeviceIdInputField.val();
-      const deviceName = devicesManagementCard.addNewDeviceNameInputField.val();
-      addNewDevice(deviceName, deviceID, email);
+      const deviceName = devicesManagementCard.newDeviceNameInputField.val();
+      addNewDevice(deviceName, deviceID, email, accessToken);
+    });
+
+    devicesManagementCard.removeDeviceButton.on('click', function () {
+      const deviceID = devicesManagementCard.newDeviceIdInputField.val();
+      removeDevice(deviceID, email);
     });
 
     // when a user clicks on a table row
@@ -133,7 +169,7 @@ $(() => {
      * by setting placeholder values for pre-defined input fields.
      */
     profileDetailsCard.usernameField.attr('placeholder', name || 'Son Mac');
-    profileDetailsCard.emailField.attr('placeholder', email);
+    profileDetailsCard.emailField.attr('value', email);
 
     /*
      * README: Populate data for measurement settings card.
@@ -252,6 +288,7 @@ $(() => {
             measurementSettingsCard.endTimeInput.val()
           ),
         },
+        accessToken: accessToken,
       };
 
       const { data: updateResponseData } = await axios.post(
@@ -273,7 +310,6 @@ $(() => {
      */
 
     const pillsSectionData = {
-      deviceID: favoriteDeviceID || '--',
       frequency:
         formattedDeviceList[favoriteDeviceID]?.measurement_settings.frequency ||
         '-- --',
@@ -296,17 +332,29 @@ $(() => {
     pillsSection.endTimeDivSettingPill.append(
       $('<span>', { text: pillsSectionData.endTime })
     );
-    pillsSection.deviceInfoPill.append(
-      $('<span>', { text: pillsSectionData.deviceID })
-    );
+    pillsSection.refreshChip.on('click', function () {
+      location.reload();
+    });
   })();
 });
 
-async function addNewDevice(name, id, email) {
+async function addNewDevice(name, id, email, accessToken) {
   const response = await axios.post('/api/add_new_device', {
     email: email,
     deviceID: id,
     deviceName: name,
+    accessToken: accessToken,
+  });
+  if (response.data.success) {
+    window.alert(response.data.message);
+    location.reload();
+  }
+}
+
+async function removeDevice(id, email) {
+  const response = await axios.post('/api/remove_device', {
+    email: email,
+    deviceID: id,
   });
   if (response.data.success) {
     window.alert(response.data.message);

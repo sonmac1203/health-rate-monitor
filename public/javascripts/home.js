@@ -7,7 +7,7 @@ $(() => {
   });
   const logOutButton = $('<span>', {
     class: 'nav-link',
-    text: 'Log Out',
+    text: 'Log out',
     style: 'cursor: pointer',
   });
 

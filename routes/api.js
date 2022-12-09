@@ -5,8 +5,6 @@ const ParticleDevice = require('../schemas/particleDevice');
 const jwt = require('jwt-simple');
 var bcrypt = require('bcryptjs');
 const axios = require('axios');
-const endOfDay = require('date-fns/endOfDay');
-const startOfDay = require('date-fns/startOfDay');
 
 const secret = 'supersecret';
 
@@ -85,7 +83,15 @@ router.get('/auth', function (req, res) {
     const decoded = jwt.decode(token, secret);
     User.findOne(
       { email: decoded.email },
-      ['email', 'lastAccess', 'devices', 'devices_added', 'recent_settings'],
+      [
+        'name',
+        'email',
+        'lastAccess',
+        'devices',
+        'devices_added',
+        'recent_settings',
+        'access_token',
+      ],
       (err, user) => {
         if (err) {
           res.status(400).json({
@@ -102,6 +108,60 @@ router.get('/auth', function (req, res) {
     );
   } catch (ex) {
     res.status(401).json({ success: false, message: 'Invalid JWT' });
+  }
+});
+
+router.post('/update_profile', function (req, res) {
+  const { name, email, currentPassword, newPassword } = req.body;
+
+  User.findOne({ email: email }, (err, user) => {
+    if (err) {
+      res.status(400).send(err);
+    } else if (!user) {
+      res.status(401).json({ error: 'Login failure!!' });
+    } else {
+      if (bcrypt.compareSync(currentPassword, user.passwordHash)) {
+        user.passwordHash = bcrypt.hashSync(newPassword, 10);
+        user.save(() => {
+          console.log('User profile has been updated.');
+        });
+        res
+          .status(201)
+          .json({ success: true, message: 'User profile has been updated.' });
+      } else {
+        res.status(201).json({
+          success: false,
+          message: 'Current password do not match. Please try again.',
+        });
+      }
+    }
+  });
+});
+
+router.post('/update_access_token', function (req, res) {
+  const { email, accessToken } = req.body;
+  try {
+    User.findOne({ email: email }, (err, user) => {
+      if (err) {
+        res.status(400).send(err);
+      } else if (!user) {
+        res.status(401).json({ error: 'Login failure!!' });
+      } else {
+        user.access_token = accessToken;
+        user.save(() => {
+          console.log('User access token has been updated.');
+        });
+        res.status(201).json({
+          success: true,
+          message: 'User access token has been updated.',
+        });
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
   }
 });
 
@@ -134,21 +194,25 @@ router.get('/auth_home', function (req, res) {
   }
 });
 
-router.post('/add_new_device', function (req, res) {
+router.post('/add_new_device', async function (req, res) {
   if (!req.body.email || !req.body.deviceID) {
     res.status(401).json({ error: 'Missing email and/or device ID' });
     return;
   }
-
+  const accessToken = req.body.accessToken;
   const deviceObj = {
     device_name: req.body.deviceName || '',
     device_id: req.body.deviceID,
   };
 
-  const defaultSettings = {
-    frequency: 30,
-    start_time: 21600,
-    end_time: 79200,
+  const particleReqBody = {
+    access_token: accessToken,
+    args: '60,1350,10',
+  };
+  const particleReqConfig = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   };
 
   try {
@@ -163,7 +227,6 @@ router.post('/add_new_device', function (req, res) {
           devices: deviceObj,
         },
       },
-
       (error, success) => {
         if (error) {
           res.status(400).json({
@@ -171,16 +234,68 @@ router.post('/add_new_device', function (req, res) {
             message: 'Cannot add the new device.',
           });
         } else {
-          res
-            .status(201)
-            .json({ success: true, message: 'Device has been added.' });
+          (async () => {
+            try {
+              const { data } = await axios.post(
+                `https://api.particle.io/v1/devices/${req.body.deviceID}/settings`,
+                particleReqBody,
+                particleReqConfig
+              );
+              console.log(data);
+              res.status(201).json({
+                success: true,
+                settings_sent: true,
+                device_added: true,
+                message:
+                  'Device has been added and default settings have been sent to device.',
+              });
+            } catch (err) {
+              res.status(200).json({
+                success: false,
+                settings_sent: false,
+                device_added: true,
+                message:
+                  'Device has been added but default settings were not sent to device.',
+              });
+            }
+          })();
         }
       }
     );
-    // const particleRoute = 'https://api.particle.io/v1/devices';
-    // const responseFromParticle = axios.post(
-    //   `https://api.particle.io/v1/devices/${req.body.deviceID}/heart`
-    // );
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
+  }
+});
+
+router.post('/remove_device', function (req, res) {
+  if (!req.body.email || !req.body.deviceID) {
+    res.status(401).json({ error: 'Missing email and/or device ID' });
+    return;
+  }
+  console.log(req.body);
+
+  try {
+    User.updateOne(
+      {
+        email: req.body.email,
+      },
+      { $pull: { devices: { device_id: req.body.deviceID } } },
+      (error, success) => {
+        if (error) {
+          res.status(400).json({
+            success: false,
+            message: 'Cannot remove the device.',
+          });
+        } else {
+          res
+            .status(201)
+            .json({ success: true, message: 'Device has been removed.' });
+        }
+      }
+    );
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -190,8 +305,15 @@ router.post('/add_new_device', function (req, res) {
 });
 
 router.post('/update_measurement_settings', function (req, res) {
-  const { email, deviceID, setting_name, frequency, start_time, end_time } =
-    req.body;
+  const {
+    email,
+    deviceID,
+    setting_name,
+    frequency,
+    start_time,
+    end_time,
+    accessToken,
+  } = req.body;
 
   const updatingObject = {
     ...(frequency.hasChanged && {
@@ -203,6 +325,16 @@ router.post('/update_measurement_settings', function (req, res) {
     ...(end_time.hasChanged && {
       'devices.$.measurement_settings.end_time': end_time.value,
     }),
+  };
+
+  const particleReqBody = {
+    access_token: accessToken,
+    args: `${start_time.value},${end_time.value},${frequency.value}`,
+  };
+  const particleReqConfig = {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
   };
 
   const settings = {
@@ -234,52 +366,31 @@ router.post('/update_measurement_settings', function (req, res) {
             message: 'Cannot update the measurement settings.',
           });
         } else {
-          res.status(201).json({
-            success: true,
-            message:
-              'Measurement settings have been updated and the settings have been stored!',
-          });
-        }
-      }
-    );
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'A database error has occured. Please try again',
-    });
-  }
-});
-
-router.post('/particle/report', function (req, res) {
-  const { data, coreid: deviceID, published_at } = req.body;
-  const [heartRate, oxygenLevel] = data.split(',').map((d) => parseInt(d));
-
-  const report = {
-    stored_at: new Date(),
-    published_at: new Date(published_at),
-    data: {
-      heart_rate: heartRate,
-      oxygen_level: oxygenLevel,
-    },
-  };
-
-  try {
-    ParticleDevice.findOneAndUpdate(
-      { device_id: deviceID },
-      {
-        $push: {
-          reports: report,
-        },
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
-      (err, doc) => {
-        if (err) {
-          res.status(401).json({ success: false, err: err });
-        } else {
-          res.status(201).json({
-            success: true,
-            message: 'The new report has been saved!',
-          });
+          (async () => {
+            try {
+              const { data } = await axios.post(
+                `https://api.particle.io/v1/devices/${deviceID}/settings`,
+                particleReqBody,
+                particleReqConfig
+              );
+              console.log(data);
+              res.status(201).json({
+                success: true,
+                settings_sent: true,
+                settings_updated: true,
+                message:
+                  'Measurement settings have been updated and the settings have been sent to device!',
+              });
+            } catch (err) {
+              res.status(200).json({
+                success: false,
+                settings_sent: false,
+                device_added: true,
+                message:
+                  'Measurement settings have been updated but the settings have not been sent to device!',
+              });
+            }
+          })();
         }
       }
     );
@@ -296,19 +407,22 @@ router.get(
   function (req, res) {
     const { deviceID, date } = req.params;
     try {
-      ParticleDevice.aggregate(
+      User.aggregate(
         [
           {
+            $unwind: '$devices',
+          },
+          {
             $match: {
-              device_id: deviceID,
+              'devices.device_id': deviceID,
             },
           },
           {
-            $unwind: '$reports',
+            $unwind: '$devices.reports',
           },
           {
             $match: {
-              'reports.published_at': {
+              'devices.reports.published_at': {
                 $gte: new Date(new Date(date).setUTCHours(0, 0, 0, 0)),
                 $lte: new Date(new Date(date).setUTCHours(23, 59, 59, 999)),
               },
@@ -317,8 +431,8 @@ router.get(
           {
             $replaceRoot: {
               newRoot: {
-                published_at: '$reports.published_at',
-                data: '$reports.data',
+                published_at: '$devices.reports.published_at',
+                data: '$devices.reports.data',
               },
             },
           },
@@ -356,7 +470,6 @@ router.get(
 
 router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
   const { deviceID } = req.params;
-
   const date = new Date();
   const yesterday = new Date(date.setDate(date.getDate() - 1));
   const lastWeek = new Date(
@@ -368,19 +481,22 @@ router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
   const lowerBound = new Date(lastWeek.setUTCHours(0, 0, 0, 0)); // first moment of the 'week'
 
   try {
-    ParticleDevice.aggregate(
+    User.aggregate(
       [
         {
+          $unwind: '$devices',
+        },
+        {
           $match: {
-            device_id: deviceID,
+            'devices.device_id': deviceID,
           },
         },
         {
-          $unwind: '$reports',
+          $unwind: '$devices.reports',
         },
         {
           $match: {
-            'reports.published_at': {
+            'devices.reports.published_at': {
               $gte: lowerBound,
               $lte: upperBound,
             },
@@ -388,13 +504,13 @@ router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
         },
         {
           $group: {
-            _id: '$_id',
-            max_heart_rate: { $max: '$reports.data.heart_rate' },
-            min_heart_rate: { $min: '$reports.data.heart_rate' },
-            avg_heart_rate: { $avg: '$reports.data.heart_rate' },
-            max_oxygen_level: { $max: '$reports.data.oxygen_level' },
-            min_oxygen_level: { $min: '$reports.data.oxygen_level' },
-            avg_oxygen_level: { $avg: '$reports.data.oxygen_level' },
+            _id: '$devices._id',
+            max_heart_rate: { $max: '$devices.reports.data.heart_rate' },
+            min_heart_rate: { $min: '$devices.reports.data.heart_rate' },
+            avg_heart_rate: { $avg: '$devices.reports.data.heart_rate' },
+            max_oxygen_level: { $max: '$devices.reports.data.oxygen_level' },
+            min_oxygen_level: { $min: '$devices.reports.data.oxygen_level' },
+            avg_oxygen_level: { $avg: '$devices.reports.data.oxygen_level' },
           },
         },
       ],
@@ -405,11 +521,84 @@ router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
             message: 'The date requested is invalid.',
           });
         } else {
-          res.status(201).json({
-            success: true,
-            message: 'The data for the requested date has been found.',
-            data: reports,
-          });
+          if (reports.length > 0) {
+            res.status(201).json({
+              success: true,
+              message: 'The data for the requested week has been found.',
+              data: reports,
+            });
+          } else {
+            res.status(201).json({
+              success: false,
+              message: 'The data for the requested week was not found.',
+            });
+          }
+        }
+      }
+    );
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'A database error has occured. Please try again',
+    });
+  }
+});
+
+router.post('/particle/report', async function (req, res) {
+  const { data, coreid: deviceID, published_at } = req.body;
+  const [heartRate, oxygenLevel] = data.split(',').map((d) => parseInt(d));
+  const report = {
+    stored_at: new Date(),
+    published_at: new Date(published_at),
+    data: {
+      heart_rate: heartRate,
+      oxygen_level: oxygenLevel,
+    },
+  };
+
+  try {
+    User.findOneAndUpdate(
+      { 'devices.device_id': deviceID },
+      {
+        $push: {
+          'devices.$.reports': report,
+        },
+      },
+      (err, doc) => {
+        if (err) {
+          res.status(401).json({ success: false, err: err });
+        } else {
+          const accessToken = doc.access_token;
+          const ackBody = {
+            access_token: accessToken,
+            args: 'success',
+          };
+          const ackConfig = {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          };
+          axios
+            .post(
+              `https://api.particle.io/v1/devices/${deviceID}/database`,
+              ackBody,
+              ackConfig
+            )
+            .then((res) => {
+              console.log(res.data);
+              res.status(201).json({
+                success: true,
+                message:
+                  'The new report has been saved and device has acknowledged!',
+              });
+            })
+            .catch((err) => {
+              res.status(201).json({
+                success: true,
+                message:
+                  'The new report has been saved but device has not acknowledged!',
+              });
+            });
         }
       }
     );

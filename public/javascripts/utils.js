@@ -1,10 +1,13 @@
 export const getConvertedTime = (time) => {
-  return time ? new Date(time * 1000).toISOString().substring(11, 16) : '';
+  const timeInSeconds = time * 60;
+  return time
+    ? new Date(timeInSeconds * 1000).toISOString().substring(11, 16)
+    : '';
 };
 
 export const getTimeInDatabaseFormat = (time) => {
   const [hour, minute] = time.split(':').map((i) => parseInt(i));
-  return hour * 3600 + minute * 60;
+  return hour * 60 + minute;
 };
 
 export const getFormattedDate = (date) => {
