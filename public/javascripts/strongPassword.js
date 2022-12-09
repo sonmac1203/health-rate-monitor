@@ -5,7 +5,7 @@ let pLower = false;
 let pUpper = false;
 let pDigit = false;
 
-//add to singup.html : <div id = "passwordError" ><ul> </ul></div>
+//added to singup.html : <div id = "passwordError" ><ul> </ul></div>
 
 let ulNode = $('ul');
 let errorElement = $('#passwordError');
@@ -32,10 +32,11 @@ function checkPassword() {
   const digit = /[0-9]/;
 
   ulNode.innerHTML = '';
+  errorElement.style.setProperty("display", "block");
   ulNode.style.setProperty("text-align", "left");
   ulNode.style.setProperty("font-size", "2vh");
   ulNode.style.setProperty("color", "red");
-  errorElement.style.setProperty("display", "block");
+
   password.style.border="2px solid red";
   
   let listNode1= document.createElement('li');
