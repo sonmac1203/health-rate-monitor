@@ -1,3 +1,15 @@
 input[type=email], input[type=password], input[type=text] {
   margin-bottom: 10px;
 }
+
+li {
+  color:red;
+}
+
+#passwordError {
+  display: none;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px;
+  text-align: center; 
+}
