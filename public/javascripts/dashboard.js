@@ -60,6 +60,8 @@ $(() => {
       window.location.replace('unauthorized.html');
     }
 
+    console.log(response.data);
+
     // README: Deconstruct attributes from response
     const {
       name,
