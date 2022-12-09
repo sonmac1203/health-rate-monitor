@@ -51,17 +51,14 @@
           <div class="left-col">
             <div
               class="mobile-profile-summary-card profile-summary-content-container shadow main-border-radius"
+              id="mobile-profile-summary-card"
             >
               <img
                 src="https://www.w3schools.com/howto/img_avatar.png"
                 alt="Italian Trulli"
                 class="profile-summary-avatar"
               />
-              <div>
-                <div><b>Son Mac</b></div>
-                <div>sontmac1203@gmail.com</div>
-              </div>
-              <button class="sign-out-button">Sign out</button>
+              <button class="sign-out-button">Log out</button>
             </div>
             <div class="mobile-navigation-list">
               <div
@@ -88,16 +85,15 @@
             </div>
 
             <div class="profile-summary-and-nav-card shadow main-border-radius">
-              <div class="profile-summary-content-container">
+              <div
+                class="profile-summary-content-container"
+                id="profile-summary-content-container"
+              >
                 <img
                   src="https://www.w3schools.com/howto/img_avatar.png"
                   alt="Italian Trulli"
                   class="profile-summary-avatar"
                 />
-                <div>
-                  <div><b>Son Mac</b></div>
-                  <span style="font-size: 12px">sontmac1203@gmail.com</span>
-                </div>
               </div>
               <div class="navigation-list">
                 <div
@@ -125,7 +121,7 @@
               <div class="authentication-area">
                 <div class="navigation-chip main-border-radius">
                   <i class="fa-solid fa-right-from-bracket"></i>
-                  <span class="sign-out-button">Sign out</span>
+                  <span class="sign-out-button">Log out</span>
                 </div>
               </div>
             </div>
@@ -146,7 +142,12 @@
                 <button
                   id="add-access-token-button"
                   class="main-border-radius"
-                  style="display: flex; gap: 5px; align-items: center"
+                  style="
+                    display: flex;
+                    gap: 5px;
+                    align-items: center;
+                    background-color: var(--secondary-brand-color);
+                  "
                 >
                   <i class="fa-solid fa-plus"></i>
                 </button>

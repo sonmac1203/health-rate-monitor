@@ -65,6 +65,15 @@ section.profile-section .right-col {
   padding: 20px 50px 20px 50px;
 }
 
+button.sign-out-button {
+  background-color: white;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--main-brand-color);
+  text-decoration-thickness: 3px;
+}
+
 @media only screen and (max-width: 850px) {
  .profile-summary-and-nav-card {
     padding-left: 15px;
@@ -130,6 +139,10 @@ section.profile-section .right-col {
   padding: 10px 10px 10px;
   gap: 10px
 }
+.device-management-card-add-new-device-container:first-child {
+  padding-bottom: 0;
+}
+
 .device-management-card-dummy-table {
   flex: 0 0 10%;
   padding-left: 10px;

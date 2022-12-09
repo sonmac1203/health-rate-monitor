@@ -1,6 +1,7 @@
 const db = require('../db');
 
 const userSchema = new db.Schema({
+  name: String,
   email: String,
   passwordHash: String,
   lastAccess: { type: Date, default: Date.now },

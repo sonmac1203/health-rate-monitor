@@ -11,15 +11,18 @@ const login = async () => {
     password: $('#passwordEntry').val(),
   };
 
-  const response = await axios.post('/api/login', {
-    email: userEntry.email,
-    password: userEntry.password,
-  });
-
-  if (response.data.success) {
-    localStorage.setItem('token', response.data.token);
-    window.location.replace('dashboard.html');
-  } else {
-    window.alert(response.data.msg);
+  try {
+    const response = await axios.post('/api/login', {
+      email: userEntry.email,
+      password: userEntry.password,
+    });
+    if (response.data.success) {
+      localStorage.setItem('token', response.data.token);
+      window.location.replace('dashboard.html');
+    } else {
+      window.alert(response.data.message);
+    }
+  } catch (err) {
+    window.alert(err.response.data.message);
   }
 };

@@ -9,6 +9,11 @@ $(() => {
 
   $('.sign-out-button').on('click', logout);
 
+  const profileSummaryAndNavCard = {
+    mobileContainer: $('#mobile-profile-summary-card'),
+    normalContainer: $('#profile-summary-content-container'),
+  };
+
   // README: Define DOM elements belong to devices management card
   const devicesManagementCard = {
     accessTokenInputField: $('#access-token-input'),
@@ -83,6 +88,24 @@ $(() => {
     }
 
     /*
+     * README: Populate data for profile card
+     */
+    const profileName = $('<div>').append($('<b>', { text: name }));
+    const profileEmail = $('<span>', { text: email, style: 'font-size: 12px' });
+    const profileContent = $('<div>', { id: 'normal-content' }).append([
+      profileName,
+      profileEmail,
+    ]);
+    if (profileSummaryAndNavCard.mobileContainer.css('display') !== 'none') {
+      $('<div>', { id: 'mobile-content' })
+        .append([profileName, profileEmail])
+        .insertAfter('#mobile-profile-summary-card img.profile-summary-avatar');
+    }
+    if (profileSummaryAndNavCard.normalContainer.css('display') !== 'none') {
+      profileSummaryAndNavCard.normalContainer.append(profileContent);
+    }
+
+    /*
      * README: Populate data for devices management card
      * by iterating through the list of devices,
      * then construct a table row to add to the table.
@@ -97,12 +120,11 @@ $(() => {
       devicesManagementCard.newDeviceNameInputField.attr('disabled', false);
       devicesManagementCard.accessTokenInputField.attr('disabled', true);
       devicesManagementCard.accessTokenInputField.val(accessToken);
+      devicesManagementCard.addAccessTokenButton.attr('disabled', true);
     }
 
     devicesManagementCard.addAccessTokenButton.on('click', function () {
       const accessToken = devicesManagementCard.accessTokenInputField.val();
-      console.log(accessToken);
-      console.log(email);
       (async () => {
         const { data } = await axios.post('/api/update_access_token', {
           email: email,
@@ -124,7 +146,7 @@ $(() => {
         }`,
       });
       const $nameData = $('<td>', {
-        text: device.device_name || `device_${devicesAdded}`,
+        text: device.device_name || '---',
       });
       const $idData = $('<td>', {
         text: device.device_id,
@@ -168,7 +190,7 @@ $(() => {
      * README: Populate data for profile management card
      * by setting placeholder values for pre-defined input fields.
      */
-    profileDetailsCard.usernameField.attr('placeholder', name || 'Son Mac');
+    profileDetailsCard.usernameField.attr('placeholder', name);
     profileDetailsCard.emailField.attr('value', email);
 
     /*

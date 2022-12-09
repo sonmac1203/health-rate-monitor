@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width" />
-  <link href="stylesheets/login.css" rel="stylesheet" />
-  <link href="stylesheets/signup.css" rel="stylesheet" />
-  <script src="javascripts/jquery-3.2.1.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="javascripts/signup.js" defer></script>
-  <script src="javascripts/strongPassword.js" defer></script>
-
-  <title>Heart Rate Monitoring | Sign up</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="stylesheets/login.css" rel="stylesheet" />
+    <link href="stylesheets/signup.css" rel="stylesheet" />
+    <script src="javascripts/jquery-3.2.1.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="javascripts/signup.js" defer></script>
+    <title>Heart Rate Monitoring | Sign up</title>
+  </head>
   <body>
     <main>
       <div class="container">
@@ -22,7 +22,6 @@
           />
         </header>
         <div class="inputField">
-          <!-- <label for="email"><b>Email</b></label> -->
           <input
             id="nameEntry"
             type="text"
@@ -30,10 +29,8 @@
             name="nameEntry"
             required
           />
-          <!-- <p id="emailAlert"></p> -->
         </div>
         <div class="inputField">
-          <!-- <label for="email"><b>Email</b></label> -->
           <input
             id="emailEntry"
             type="email"
@@ -41,11 +38,8 @@
             name="email"
             required
           />
-          <!-- <p id="emailAlert"></p> -->
         </div>
-
         <div class="inputField">
-          <!-- <label for="password"><b>Password</b></label> -->
           <input
             id="passwordEntry"
             type="password"
@@ -54,9 +48,7 @@
             required
           />
         </div>
-
         <div class="inputField">
-          <!-- <label for="passwordConfirmed"><b>Confirm password</b></label> -->
           <input
             id="passwordConfirmedEntry"
             type="password"
@@ -64,11 +56,7 @@
             name="passwordConfirmed"
             required
           />
-          <!-- <p id="passwordAlert"></p> -->
         </div>
-
-        <div id = "passwordError"><ul> </ul></div>
-
         <button type="submit" id="signUpButton">Sign up</button>
         <p class="noAccount">
           Already had an account? <a href="/login.html">Log in</a>

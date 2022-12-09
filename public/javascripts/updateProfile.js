@@ -6,12 +6,12 @@ const fieldsAndButton = {
   saveButton: $('#profile-details-card-save-button'),
 };
 
-const userName = fieldsAndButton.nameInpulField.val();
-const email = fieldsAndButton.emailField.val();
-const currentPassword = fieldsAndButton.currentPassword.val();
-const newPassword = fieldsAndButton.newPassword.val();
-
 fieldsAndButton.saveButton.on('click', function () {
+  const userName = fieldsAndButton.nameInpulField.val();
+  const email = fieldsAndButton.emailField.val();
+  const currentPassword = fieldsAndButton.currentPassword.val();
+  const newPassword = fieldsAndButton.newPassword.val();
+
   const lower = /[a-z]/;
   const upper = /[A-Z]/;
   const digit = /[0-9]/;
@@ -51,6 +51,12 @@ fieldsAndButton.saveButton.on('click', function () {
   }
 });
 
-fieldsAndButton.currentPassword.on('input', function () {
-  fieldsAndButton.saveButton.attr('disabled', currentPassword.length === 0);
+fieldsAndButton.currentPassword.on('change', function () {
+  const val = $(this).val();
+  fieldsAndButton.saveButton.attr('disabled', val.length === 0);
+});
+
+fieldsAndButton.newPassword.on('change', function () {
+  const val = $(this).val();
+  fieldsAndButton.saveButton.attr('disabled', val.length === 0);
 });

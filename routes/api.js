@@ -17,17 +17,24 @@ router.post('/signup', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) res.status(401).json({ success: false, err: err });
     else if (user) {
-      res.status(401).json({ success: false, msg: 'This email already used' });
+      res
+        .status(401)
+        .json({ success: false, message: 'This email already used' });
     } else {
       const passwordHash = bcrypt.hashSync(req.body.password, 10);
       const newUser = new User({
+        name: req.body.name || 'Anon',
         email: req.body.email,
         passwordHash: passwordHash,
       });
 
       newUser.save((err, user) => {
         if (err) {
-          res.status(400).json({ success: false, err: err });
+          res.status(400).json({
+            success: false,
+            err: err,
+            message: 'An error has occurred. Please try again.',
+          });
         } else {
           const msgStr = `User (${req.body.email}) account has been created.`;
           res.status(201).json({ success: true, message: msgStr });
@@ -45,26 +52,30 @@ router.post('/login', function (req, res) {
   // Get user from the database
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) {
-      res.status(400).send(err);
+      res.status(400).send({
+        success: false,
+        message: 'An error has occurred. Please try again.',
+      });
     } else if (!user) {
       // Username not in the database
-      res.status(401).json({ error: 'Login failure!!' });
+      res
+        .status(401)
+        .json({ success: false, message: 'Email not found. Please try again' });
     } else {
       if (bcrypt.compareSync(req.body.password, user.passwordHash)) {
         const token = jwt.encode({ email: user.email }, secret);
-        //update user's last access time
         user.lastAccess = new Date();
         user.save(() => {
           console.log("User's LastAccess has been update.");
         });
-        // Send back a token that contains the user's username
         res
           .status(201)
-          .json({ success: true, token: token, msg: 'Login success' });
+          .json({ success: true, token: token, message: 'Login success' });
       } else {
-        res
-          .status(401)
-          .json({ success: false, msg: 'Email or password invalid.' });
+        res.status(401).json({
+          success: false,
+          message: 'Incorrect password. Please try again.',
+        });
       }
     }
   });
@@ -201,7 +212,7 @@ router.post('/add_new_device', async function (req, res) {
   }
   const accessToken = req.body.accessToken;
   const deviceObj = {
-    device_name: req.body.deviceName || '',
+    device_name: req.body.deviceName,
     device_id: req.body.deviceID,
   };
 
