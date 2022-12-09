@@ -35,17 +35,6 @@ const userSchema = new db.Schema({
     ],
     default: [],
   },
-  recent_settings: {
-    type: [
-      {
-        setting_name: String,
-        frequency: Number,
-        start_time: Number,
-        end_time: Number,
-      },
-    ],
-    default: [],
-  },
 });
 
 const User = db.model('Users', userSchema);

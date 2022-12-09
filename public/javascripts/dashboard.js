@@ -39,7 +39,6 @@ $(() => {
     endTimeInput: $('#measurement-end'),
     deviceSelect: $('#measurement-chosen-device'),
     updateButton: $('#measurement-settings-card-update-button'),
-    recentSettingsSelect: $('#measurement-settings-recent'),
   };
 
   const pillsSection = {
@@ -60,8 +59,6 @@ $(() => {
       window.location.replace('unauthorized.html');
     }
 
-    console.log(response.data);
-
     // README: Deconstruct attributes from response
     const {
       name,
@@ -69,7 +66,6 @@ $(() => {
       access_token: accessToken,
       devices_added: devicesAdded,
       devices,
-      recent_settings,
     } = response.data.user;
 
     // README: Sort devices by time added
@@ -166,7 +162,7 @@ $(() => {
       $itemRow.append(rowData);
       devicesManagementCard.deviceRows.append($itemRow);
     }
-    devicesManagementCard.addDeviceButton.click(() => {
+    devicesManagementCard.addDeviceButton.on('click', function () {
       // add new device
       const deviceID = devicesManagementCard.newDeviceIdInputField.val();
       const deviceName = devicesManagementCard.newDeviceNameInputField.val();
@@ -201,19 +197,6 @@ $(() => {
      * device list for displaying, if at least a device has
      * already been added.
      */
-    for (let i = 0; i < recent_settings.length; i++) {
-      const { setting_name, frequency, start_time, end_time } =
-        recent_settings[i];
-      const text = `${setting_name}: freq of ${frequency} mins, starts at ${getConvertedTime(
-        start_time
-      )}, and ends at ${getConvertedTime(end_time)}`;
-      const $option = $('<option>', {
-        value: i,
-        id: i,
-        text: text,
-      });
-      measurementSettingsCard.recentSettingsSelect.append($option);
-    }
 
     // Define default values
     const defaultMinute = devices[0]?.measurement_settings.frequency || '--';
@@ -225,20 +208,19 @@ $(() => {
     );
     // Assign the defaul values to input fields
     measurementSettingsCard.frequencyInput.attr('placeholder', defaultMinute);
-    measurementSettingsCard.startTimeInput.attr('value', defaultStartTime);
-    measurementSettingsCard.endTimeInput.attr('value', defaultEndTime);
-    measurementSettingsCard.deviceSelect.attr(
-      'value',
-      devices[0]?.device_id || 'No device was added'
-    );
+    measurementSettingsCard.startTimeInput.val(defaultStartTime);
+    measurementSettingsCard.endTimeInput.val(defaultEndTime);
 
     for (const device of devices) {
       const $option = $('<option>', {
         value: device.device_id,
         text: device.device_id,
+        selected: device.device_id === localStorage.getItem('favoriteDeviceID'),
       });
+
       measurementSettingsCard.deviceSelect.append($option);
     }
+
     // Define an on change handler for device select
     measurementSettingsCard.deviceSelect.change(() => {
       const chosenDeviceId = measurementSettingsCard.deviceSelect.val();
@@ -363,14 +345,15 @@ $(() => {
 });
 
 async function addNewDevice(name, id, email, accessToken) {
-  const response = await axios.post('/api/add_new_device', {
+  const { data } = await axios.post('/api/add_new_device', {
     email: email,
     deviceID: id,
     deviceName: name,
     accessToken: accessToken,
   });
-  if (response.data.success) {
-    window.alert(response.data.message);
+  window.alert('Please wait ...');
+  if (data.success) {
+    window.alert(data.message);
     location.reload();
   }
 }

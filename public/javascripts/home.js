@@ -29,7 +29,6 @@ $(() => {
         }
       })();
     } else {
-      console.log('HERER');
       headerRightNav.append(logOutButton);
     }
   }

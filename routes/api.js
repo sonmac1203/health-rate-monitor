@@ -100,7 +100,6 @@ router.get('/auth', function (req, res) {
         'lastAccess',
         'devices',
         'devices_added',
-        'recent_settings',
         'access_token',
       ],
       (err, user) => {
@@ -262,7 +261,7 @@ router.post('/add_new_device', async function (req, res) {
               });
             } catch (err) {
               res.status(200).json({
-                success: false,
+                success: true,
                 settings_sent: false,
                 device_added: true,
                 message:
@@ -347,13 +346,6 @@ router.post('/update_measurement_settings', function (req, res) {
     },
   };
 
-  const settings = {
-    setting_name: setting_name,
-    frequency: frequency.value,
-    start_time: start_time.value,
-    end_time: end_time.value,
-  };
-
   try {
     User.updateOne(
       {
@@ -362,12 +354,6 @@ router.post('/update_measurement_settings', function (req, res) {
       },
       {
         $set: updatingObject,
-        $push: {
-          recent_settings: {
-            $each: [settings],
-            $slice: -3,
-          },
-        },
       },
       (error, success) => {
         if (error) {

@@ -1,15 +1,21 @@
 import { getTodayInTimeInputFormat } from './utils.js';
 
-const sadFaceEmoji = $('<i>', {
-  class: 'fa-regular fa-face-frown',
+const dailyChartNotFoundText = $('<span>', {
+  text: 'Daily chart not found.',
 });
-const chartNotFoundText = $('<span>', {
-  text: 'Chart not found. Please try again!',
+const weeklyChartNotFoundText = $('<span>', {
+  text: 'Weekly chart not found.',
 });
-const chartNotFoundMessage = $('<div>', {
+const dailyChartNotFoundMessage = $('<div>', {
+  id: 'daily-chart-not-found-message',
   style:
     'margin: 20px 0; display: flex; gap: 5px; align-items: center; justify-content: center',
-}).append([sadFaceEmoji, chartNotFoundText]);
+}).append(dailyChartNotFoundText);
+const weeklyChartNotFoundMessage = $('<div>', {
+  id: 'weekly-chart-not-found-message',
+  style:
+    'margin: 20px 0; display: flex; gap: 5px; align-items: center; justify-content: center',
+}).append(weeklyChartNotFoundText);
 
 const requestDailyData = async (deviceID, date) => {
   const { data } = await axios.get(
@@ -21,7 +27,7 @@ const requestDailyData = async (deviceID, date) => {
 const drawWeeklyChart = (data) => {
   $('#my-weekly-chart').empty();
   if (!data.success) {
-    $('#my-weekly-chart').append(chartNotFoundMessage);
+    $('#my-weekly-chart').append(weeklyChartNotFoundMessage);
     $('#my-weekly-chart').addClass('shadow');
     return;
   }
@@ -74,7 +80,7 @@ const drawWeeklyChart = (data) => {
 const drawDailyChart = (data, date) => {
   $('#my-daily-chart').empty();
   if (!data.success) {
-    $('#my-daily-chart').append(chartNotFoundMessage);
+    $('#my-daily-chart').append(dailyChartNotFoundMessage);
     $('#my-daily-chart').addClass('shadow');
     return;
   }

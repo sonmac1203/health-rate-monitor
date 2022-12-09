@@ -121,7 +121,6 @@ Verify if the authentication has been completed then fetch user data from databa
     "last_access": "...",
     "devices_added": 1,
     "devices": [{...}],
-    "recent_settings": [{...}],
   }
 }
 ```
@@ -269,7 +268,7 @@ This endpoint will be called as the user attempts to remove a device from their 
 
 ## 8. Update the measurement settings of a device
 
-This endpoint will be called as the user attempts to update the measurement settings. Similarly to the `add_new_device` endpoint, the body of this request includes an `access_token`. As this endpoint is called, the server will update the record in the database with new values, then add the settings to an array called `recent_settings` for future use (limit to only 3 records), then make a POST request to Particle Cloud to notify the device. 
+This endpoint will be called as the user attempts to update the measurement settings. Similarly to the `add_new_device` endpoint, the body of this request includes an `access_token`. As this endpoint is called, the server will update the record in the database with new values, then make a POST request to Particle Cloud to notify the device. 
 
 **URL** : `/api/update_measurement_settings`
 
@@ -371,16 +370,6 @@ This endpoint will be called to fetch the data for the daily chart of the partic
                   {...}
               ]
           },
-      ],
-      "recent_settings": [
-          {
-              "setting_name": "",
-              "frequency": 5,
-              "start_time": 180,
-              "end_time": 1240,
-              "_id": "63930eba3500ad8b89dccb7d"
-          },
-          {...}
       ],
   }
 }
