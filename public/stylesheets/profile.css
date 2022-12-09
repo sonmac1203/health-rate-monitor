@@ -40,6 +40,9 @@ section.profile-section .right-col {
   .device-management-card {
     margin-left: 0 !important;
   }
+  .container {
+    gap: 2rem !important;
+  }
 }
 
 @media only screen and (min-width: 601px) {
@@ -151,6 +154,11 @@ section.profile-section .right-col {
   cursor: pointer;
   font-weight: bold;
 }
+.device-management-card-add-new-device-container button:last-child {
+
+  background-color: lightgray;
+
+}
 .device-management-card-add-new-device-container button:hover {
   filter: brightness(85%)
 }
@@ -214,6 +222,10 @@ th:last-child, td:last-child {
 button.profile-details-card-save-button {
   padding: 8px;
   border: 1px solid lightgray;
+  cursor: pointer;
+}
+button.profile-details-card-save-button:hover {
+  filter: brightness(85%);
 }
 .profile-details-card label {
   font-size: 14px;

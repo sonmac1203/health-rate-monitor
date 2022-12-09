@@ -4,13 +4,10 @@ section.pills-section {
 }
 
 @media only screen and (max-width: 600px) {
-  section.pills-section {
-    margin-top: 20px !important;
-  }
   .setting-pill-col {
     display: none;
   }
-  .device-info-pill-col {
+  .refresh-chip-col {
     flex: 0 0 49% !important;
   }
   .date-picker-col {
@@ -28,7 +25,7 @@ section.pills-section {
 .setting-pill-col {
   flex: 0 0 39.2%;
 }
-.device-info-pill-col {
+.refresh-chip-col {
   flex: 0 0 28.4%
 }
 .date-picker-col {
@@ -36,7 +33,7 @@ section.pills-section {
 }
 
 /* Pills */
-.setting-pill, .device-info-pill, .date-picker-chip {
+.setting-pill, .refresh-chip, .date-picker-chip {
   background-color: white;
   height: 3rem;
   padding: 10px 20px 10px 20px;
@@ -45,7 +42,6 @@ section.pills-section {
 }
 
 .setting-pill {
-
   justify-content: space-between;
 }
 
@@ -54,37 +50,18 @@ section.pills-section {
   gap: 10px
 }
 
-.device-info-pill {
-  gap: 10px
+.refresh-chip {
+  gap: 10px;
+  cursor: pointer;
+}
+.refresh-chip:hover {
+  filter: brightness(85%)
 }
 
 .date-picker-chip {
   padding: 10px 20px 10px 20px;
   overflow: hidden;
 }
-
-/* .date-picker-chip .view-mode-flipper-container {
-  flex: 0 0 20%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--main-bg-color);
-  cursor: pointer;
-} */
-
-/* .date-picker-chip .view-mode-flipper-container:hover {
-  background-color: lightgray;
-} */
-
-/* .date-picker-chip .view-mode-time-info-container {
-  flex: 0 0 80%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
-} */
 
 .date-picker-chip input[type=date].view-mode-label {
   width: 100%;

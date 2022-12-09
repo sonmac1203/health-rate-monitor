@@ -13,6 +13,7 @@
     <script type="module" src="javascripts/dashboard.js" defer></script>
     <script type="module" src="javascripts/dashboardNav.js" defer></script>
     <script type="module" src="javascripts/visualization.js" defer></script>
+    <script type="module" src="javascripts/updateProfile.js" defer></script>
     <title>Heart Rate Monitoring | Dashboard</title>
     <script
       src="https://kit.fontawesome.com/ead8c78b5a.js"
@@ -40,7 +41,7 @@
       </nav>
       <nav class="header-right-nav">
         <span class="nav-link sign-out-button" style="cursor: pointer"
-          >Log Out</span
+          >Log out</span
         >
       </nav>
     </header>
@@ -137,6 +138,22 @@
               <div class="device-management-card-add-new-device-container">
                 <input
                   type="text"
+                  id="access-token-input"
+                  name="access-token-input"
+                  placeholder="Particle API access token"
+                  class="main-border-radius"
+                />
+                <button
+                  id="add-access-token-button"
+                  class="main-border-radius"
+                  style="display: flex; gap: 5px; align-items: center"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="device-management-card-add-new-device-container">
+                <input
+                  type="text"
                   id="new-device-name-input"
                   name="device-name"
                   placeholder="Device name"
@@ -155,7 +172,13 @@
                   style="display: flex; gap: 5px; align-items: center"
                 >
                   <i class="fa-solid fa-plus"></i>
-                  ADD
+                </button>
+                <button
+                  id="remove-device-button"
+                  class="main-border-radius"
+                  style="display: flex; gap: 5px; align-items: center"
+                >
+                  <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
               <table class="device-management-card-dummy-table">
@@ -200,7 +223,7 @@
                     ><b>Current password</b></label
                   >
                   <input
-                    type="text"
+                    type="password"
                     placeholder="Current password"
                     name="profile-details-card-current-password"
                     id="profile-details-card-current-password"
@@ -213,7 +236,7 @@
                     ><b>New password</b></label
                   >
                   <input
-                    type="text"
+                    type="password"
                     placeholder="New password"
                     name="profile-details-card-new-password"
                     id="profile-details-card-new-password"
@@ -224,7 +247,7 @@
               </div>
               <button
                 class="profile-details-card-save-button main-border-radius"
-                id="profile-details-card-save-button main-border-radius"
+                id="profile-details-card-save-button"
               >
                 Save
               </button>
@@ -333,9 +356,10 @@
               </div>
             </div>
           </div>
-          <div class="device-info-pill-col">
-            <div class="device-info-pill shadow main-border-radius">
-              <i class="fa-solid fa-microchip"></i>
+          <div class="refresh-chip-col">
+            <div class="refresh-chip shadow main-border-radius">
+              <i class="fa-solid fa-rotate-right"></i>
+              Refresh page
             </div>
           </div>
           <div class="date-picker-col">
@@ -350,13 +374,13 @@
           </div>
         </section>
         <section class="chart-section" id="chart-section">
-          <div id="my-weekly-chart" class="main-border-radius shadow"></div>
+          <div id="my-weekly-chart" class="main-border-radius"></div>
         </section>
         <section class="chart-section" id="daily-chart-section">
-          <div id="my-daily-chart" class="main-border-radius shadow"></div>
+          <div id="my-daily-chart" class="main-border-radius"></div>
         </section>
       </div>
     </main>
-    <footer>Created by team XX - 2022</footer>
+    <footer>Created by team 20 - 2022</footer>
   </body>
 </html>
