@@ -130,6 +130,7 @@ $(() => {
         });
         if (data.success) {
           location.reload();
+          window.alert(data.message);
         }
       })();
     });
@@ -188,6 +189,7 @@ $(() => {
      * README: Populate data for profile management card
      * by setting placeholder values for pre-defined input fields.
      */
+    localStorage.setItem('name', name);
     profileDetailsCard.usernameField.attr('placeholder', name);
     profileDetailsCard.emailField.attr('value', email);
 

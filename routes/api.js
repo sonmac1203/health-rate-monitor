@@ -122,7 +122,11 @@ router.get('/auth', function (req, res) {
 });
 
 router.post('/update_profile', function (req, res) {
-  const { name, email, currentPassword, newPassword } = req.body;
+  // const { name, email, currentPassword, newPassword } = req.body;
+  const { email, name, password } = req.body;
+
+  const { update: nameUpdate, value: nameValue } = name;
+  const { update: passwordUpdate, value: passwordValue } = password;
 
   User.findOne({ email: email }, (err, user) => {
     if (err) {
@@ -130,20 +134,29 @@ router.post('/update_profile', function (req, res) {
     } else if (!user) {
       res.status(401).json({ error: 'Login failure!!' });
     } else {
-      if (bcrypt.compareSync(currentPassword, user.passwordHash)) {
-        user.passwordHash = bcrypt.hashSync(newPassword, 10);
-        user.save(() => {
-          console.log('User profile has been updated.');
-        });
-        res
-          .status(201)
-          .json({ success: true, message: 'User profile has been updated.' });
-      } else {
-        res.status(201).json({
-          success: false,
-          message: 'Current password do not match. Please try again.',
-        });
+      if (passwordUpdate) {
+        if (
+          bcrypt.compareSync(passwordValue.currentPassword, user.passwordHash)
+        ) {
+          user.passwordHash = bcrypt.hashSync(passwordValue.newPassword, 10);
+        } else {
+          res.status(201).json({
+            success: false,
+            message: 'Current password do not match. Please try again.',
+          });
+          return;
+        }
       }
+      if (nameUpdate) {
+        user.name = nameValue;
+      }
+      user.save(() => {
+        console.log('User profile has been updated.');
+      });
+      res.status(201).json({
+        success: true,
+        message: 'User profile has been updated.',
+      });
     }
   });
 });

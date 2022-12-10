@@ -207,13 +207,6 @@
   }
 }
 
-#how-to {
-  background-color: var(--main-bg-color);
-  padding: 4rem 0 4rem 0;
-  display: flex;
-
-}
-
 .how-to-photo-container {
   width: 100%;
   display: flex;
