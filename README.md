@@ -6,6 +6,7 @@
 - Technologies: jQuery, Node.js, Express.js, HTML, CSS, Particle.io
 - Server link: http://ec2-52-42-88-25.us-west-2.compute.amazonaws.com:3000/
 - Pitch video: https://www.youtube.com/watch?v=jyNUlk_IRU0
+- Demonstration video: https://clipchamp.com/watch/0stCxYWBzli
 
 ## Installation
 
