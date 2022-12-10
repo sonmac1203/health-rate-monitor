@@ -1,18 +1,19 @@
 var express = require('express');
 var router = express.Router();
-const User = require('../schemas/user');
-const ParticleDevice = require('../schemas/particleDevice');
+const User = require('../schemas/user'); // Importing User schema
 const jwt = require('jwt-simple');
 var bcrypt = require('bcryptjs');
-const axios = require('axios');
+const axios = require('axios'); // Importing axios for http requests
 
 const secret = 'supersecret';
 
-/* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
+/*
+ * Sign up a user
+ */
 router.post('/signup', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) res.status(401).json({ success: false, err: err });
@@ -27,7 +28,6 @@ router.post('/signup', (req, res) => {
         email: req.body.email,
         passwordHash: passwordHash,
       });
-
       newUser.save((err, user) => {
         if (err) {
           res.status(400).json({
@@ -44,6 +44,9 @@ router.post('/signup', (req, res) => {
   });
 });
 
+/*
+ * Log a user in
+ */
 router.post('/login', function (req, res) {
   if (!req.body.email || !req.body.password) {
     res.status(401).json({ error: 'Missing email and/or password' });
@@ -81,14 +84,15 @@ router.post('/login', function (req, res) {
   });
 });
 
+/*
+ * Authenticating the user with web token and fetch user data
+ */
 router.get('/auth', function (req, res) {
-  // See if the X-Auth header is set
   if (!req.headers['x-auth']) {
     return res
       .status(401)
       .json({ success: false, msg: 'Missing X-Auth header' });
   }
-  // X-Auth should contain the token
   const token = req.headers['x-auth'];
   try {
     const decoded = jwt.decode(token, secret);
@@ -121,10 +125,42 @@ router.get('/auth', function (req, res) {
   }
 });
 
-router.post('/update_profile', function (req, res) {
-  // const { name, email, currentPassword, newPassword } = req.body;
-  const { email, name, password } = req.body;
+/*
+ * Simple authentication route for nav bar - no data fetching
+ */
+router.get('/auth_home', function (req, res) {
+  // See if the X-Auth header is set
+  if (!req.headers['x-auth']) {
+    return res
+      .status(401)
+      .json({ success: false, msg: 'Missing X-Auth header' });
+  }
+  const token = req.headers['x-auth'];
+  try {
+    const decoded = jwt.decode(token, secret);
+    User.findOne({ email: decoded.email }, ['email'], (err, user) => {
+      if (err) {
+        res.status(400).json({
+          success: false,
+          message: 'Error contacting DB. Please contact support.',
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          user: user,
+        });
+      }
+    });
+  } catch (ex) {
+    res.status(401).json({ success: false, message: 'Invalid JWT' });
+  }
+});
 
+/*
+ * Update a user's profile with new username or password
+ */
+router.post('/update_profile', function (req, res) {
+  const { email, name, password } = req.body;
   const { update: nameUpdate, value: nameValue } = name;
   const { update: passwordUpdate, value: passwordValue } = password;
 
@@ -135,6 +171,7 @@ router.post('/update_profile', function (req, res) {
       res.status(401).json({ error: 'Login failure!!' });
     } else {
       if (passwordUpdate) {
+        // if the user wants to update the password
         if (
           bcrypt.compareSync(passwordValue.currentPassword, user.passwordHash)
         ) {
@@ -148,6 +185,7 @@ router.post('/update_profile', function (req, res) {
         }
       }
       if (nameUpdate) {
+        // If the user wants to update username
         user.name = nameValue;
       }
       user.save(() => {
@@ -161,6 +199,9 @@ router.post('/update_profile', function (req, res) {
   });
 });
 
+/*
+ * Update/Add a user's access token for Particle Cloud API
+ */
 router.post('/update_access_token', function (req, res) {
   const { email, accessToken } = req.body;
   try {
@@ -188,50 +229,29 @@ router.post('/update_access_token', function (req, res) {
   }
 });
 
-router.get('/auth_home', function (req, res) {
-  // See if the X-Auth header is set
-  if (!req.headers['x-auth']) {
-    return res
-      .status(401)
-      .json({ success: false, msg: 'Missing X-Auth header' });
-  }
-  // X-Auth should contain the token
-  const token = req.headers['x-auth'];
-  try {
-    const decoded = jwt.decode(token, secret);
-    User.findOne({ email: decoded.email }, ['email'], (err, user) => {
-      if (err) {
-        res.status(400).json({
-          success: false,
-          message: 'Error contacting DB. Please contact support.',
-        });
-      } else {
-        res.status(200).json({
-          success: true,
-          user: user,
-        });
-      }
-    });
-  } catch (ex) {
-    res.status(401).json({ success: false, message: 'Invalid JWT' });
-  }
-});
-
+/*
+ * Add a new device to a user's account
+ */
 router.post('/add_new_device', async function (req, res) {
   if (!req.body.email || !req.body.deviceID) {
     res.status(401).json({ error: 'Missing email and/or device ID' });
     return;
   }
   const accessToken = req.body.accessToken;
+
+  // Constructing a device object
   const deviceObj = {
     device_name: req.body.deviceName,
     device_id: req.body.deviceID,
   };
 
+  // Constructing the default settings to send to device
   const particleReqBody = {
     access_token: accessToken,
-    args: '60,1200,20',
+    args: '360,1320,30', // start_time,end_time,frequency (in minutes)
   };
+
+  // Defining headers of the requests
   const particleReqConfig = {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -239,15 +259,14 @@ router.post('/add_new_device', async function (req, res) {
   };
 
   try {
-    // Get user from the database
     User.findOneAndUpdate(
       {
         email: req.body.email,
       },
       {
-        $inc: { devices_added: 1 },
+        $inc: { devices_added: 1 }, // Increment the number of devices by 1
         $push: {
-          devices: deviceObj,
+          devices: deviceObj, // Push to array
         },
       },
       (error, success) => {
@@ -259,6 +278,7 @@ router.post('/add_new_device', async function (req, res) {
         } else {
           (async () => {
             try {
+              // Making a request to the Particle device with new settings
               const { data } = await axios.post(
                 `https://api.particle.io/v1/devices/${req.body.deviceID}/settings`,
                 particleReqBody,
@@ -293,6 +313,9 @@ router.post('/add_new_device', async function (req, res) {
   }
 });
 
+/*
+ * Remove the device from the user's account
+ */
 router.post('/remove_device', function (req, res) {
   if (!req.body.email || !req.body.deviceID) {
     res.status(401).json({ error: 'Missing email and/or device ID' });
@@ -326,16 +349,12 @@ router.post('/remove_device', function (req, res) {
   }
 });
 
+/*
+ * Update the measurement settings of a user's device
+ */
 router.post('/update_measurement_settings', function (req, res) {
-  const {
-    email,
-    deviceID,
-    setting_name,
-    frequency,
-    start_time,
-    end_time,
-    accessToken,
-  } = req.body;
+  const { email, deviceID, frequency, start_time, end_time, accessToken } =
+    req.body;
 
   const updatingObject = {
     ...(frequency.hasChanged && {
@@ -411,6 +430,9 @@ router.post('/update_measurement_settings', function (req, res) {
   }
 });
 
+/*
+ * Fetch daily readings of a device with a queried date in format YYYY-MM-DD
+ */
 router.get(
   '/particle/device_report_daily/:deviceID/:date',
   function (req, res) {
@@ -477,6 +499,9 @@ router.get(
   }
 );
 
+/*
+ * Fetch weekly readings of a device
+ */
 router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
   const { deviceID } = req.params;
   const date = new Date();
@@ -553,6 +578,9 @@ router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
   }
 });
 
+/*
+ * Stores the device's report to database. This route is hit by the Particle device.
+ */
 router.post('/particle/report', async function (req, res) {
   const { data, coreid: deviceID, published_at } = req.body;
   const [heartRate, oxygenLevel] = data.split(',').map((d) => parseInt(d));
