@@ -230,7 +230,7 @@ router.post('/add_new_device', async function (req, res) {
 
   const particleReqBody = {
     access_token: accessToken,
-    args: '60,1350,10',
+    args: '60,1200,20',
   };
   const particleReqConfig = {
     headers: {

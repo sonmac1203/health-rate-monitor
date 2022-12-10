@@ -150,7 +150,10 @@ $(() => {
       const $idData = $('<td>', {
         text: device.device_id,
       });
-      const $iconData = $('<td>', { class: 'icon-data-cell' }).append(
+      const $iconData = $('<td>', {
+        class: 'icon-data-cell',
+        style: 'text-align: right',
+      }).append(
         $('<i>', {
           class: 'fa-regular fa-square-check',
           style: 'font-size: 20px; color: var(--secondary-brand-color)',
