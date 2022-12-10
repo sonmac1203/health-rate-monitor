@@ -4,8 +4,13 @@ const User = require('../schemas/user'); // Importing User schema
 const jwt = require('jwt-simple');
 var bcrypt = require('bcryptjs');
 const axios = require('axios'); // Importing axios for http requests
-
 const secret = 'supersecret';
+
+// Get the next date
+const getNextDate = (time) => {
+  const date = new Date(time);
+  return new Date(date.setDate(date.getDate() + 1));
+};
 
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -437,6 +442,7 @@ router.get(
   '/particle/device_report_daily/:deviceID/:date',
   function (req, res) {
     const { deviceID, date } = req.params;
+    const actualDate = getNextDate(date);
     try {
       User.aggregate(
         [
@@ -454,8 +460,8 @@ router.get(
           {
             $match: {
               'devices.reports.published_at': {
-                $gte: new Date(new Date(date).setUTCHours(0, 0, 0, 0)),
-                $lte: new Date(new Date(date).setUTCHours(23, 59, 59, 999)),
+                $gte: new Date(new Date(actualDate).setHours(0, 0, 0, 0)),
+                $lte: new Date(new Date(actualDate).setHours(23, 59, 59, 999)),
               },
             },
           },
@@ -511,8 +517,8 @@ router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
     yesterday.getMonth(),
     yesterday.getDate() - 6
   );
-  const upperBound = new Date(yesterday.setUTCHours(23, 59, 59, 999)); // last moment of the 'week'
-  const lowerBound = new Date(lastWeek.setUTCHours(0, 0, 0, 0)); // first moment of the 'week'
+  const upperBound = new Date(yesterday.setHours(23, 59, 59, 999)); // last moment of the 'week'
+  const lowerBound = new Date(lastWeek.setHours(0, 0, 0, 0)); // first moment of the 'week'
 
   try {
     User.aggregate(
@@ -584,9 +590,12 @@ router.get('/particle/device_report_weekly/:deviceID', function (req, res) {
 router.post('/particle/report', async function (req, res) {
   const { data, coreid: deviceID, published_at } = req.body;
   const [heartRate, oxygenLevel] = data.split(',').map((d) => parseInt(d));
+
+  const now = new Date().toUTCString();
+  const publishedAt = new Date(published_at).toUTCString();
   const report = {
-    stored_at: new Date(),
-    published_at: new Date(published_at),
+    stored_at: now,
+    published_at: publishedAt,
     data: {
       heart_rate: heartRate,
       oxygen_level: oxygenLevel,

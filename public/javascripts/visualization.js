@@ -1,4 +1,8 @@
-import { getTodayInTimeInputFormat } from './utils.js';
+import {
+  getTodayInTimeInputFormat,
+  getYesterdayAndLastWeek,
+  getFormattedDate,
+} from './utils.js';
 
 const dailyChartNotFoundText = $('<span>', {
   text: 'Daily chart not found.',
@@ -63,13 +67,17 @@ const drawWeeklyChart = (data) => {
       color: '#CD5C5C',
     },
   };
+
+  const { yesterday, lastWeekDay } = getYesterdayAndLastWeek();
   const chartData = [heartRateTrace, oxygenLevelTrace];
   const chartLayout = {
     barmode: 'group',
     showlegend: true,
     legend: { orientation: 'h' },
     title: {
-      text: 'Weekly summary',
+      text: `Weekly summary ${getFormattedDate(
+        lastWeekDay
+      )} to ${getFormattedDate(yesterday)}`,
     },
   };
   const chartConfig = { responsive: true };
@@ -85,7 +93,7 @@ const drawDailyChart = (data, date) => {
     return;
   }
   const reports = data.data;
-  const xAxis = reports.map((r) => r.published_at);
+  const xAxis = reports.map((r) => new Date(r.published_at));
   const heartRateData = reports.map((r) => r.data.heart_rate);
   const oxygenLevelData = reports.map((r) => r.data.oxygen_level);
   const heartRateTrace = {
