@@ -4,7 +4,7 @@
 
 - Authors: Son Mac, Gerrick Rubalcava, Zach Shellouff
 - Technologies: jQuery, Node.js, Express.js, HTML, CSS, Particle.io
-- Server link: 
+- Server link: http://ec2-52-42-88-25.us-west-2.compute.amazonaws.com:3000/
 
 ## Installation
 
@@ -54,9 +54,9 @@
 
 - **Email**
 
-        sontmac1203@gmail.com
+        ece413@gmail.com
 
 - **Password**
 
-        thienson
+        Thien1son2@12
 
