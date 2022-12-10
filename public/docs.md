@@ -231,7 +231,7 @@ This endpoint will be called as the user attempts to add a new device to their d
 
 ```json
 { 
-  "success": false,
+  "success": true,
   "settings_sent": false,
   "device_added": true,
   "message": "Device has been added but default settings were not sent to device." 
@@ -442,7 +442,7 @@ This special endpoint will called by the device as it publishes the readings to 
 
 ```json
 { 
-  "success": false,
+  "success": true,
   "message": "The new report has been saved but device has not acknowledged!" 
 }
 ```
