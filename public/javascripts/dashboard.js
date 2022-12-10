@@ -276,6 +276,7 @@ $(() => {
     });
 
     measurementSettingsCard.updateButton.click(async () => {
+      window.alert('Please wait...');
       const chosenSettings = {
         email: email,
         deviceID: measurementSettingsCard.deviceSelect.val(),

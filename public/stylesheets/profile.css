@@ -267,6 +267,10 @@ button.profile-details-card-save-button:hover {
   border: 1px solid lightgray;
   width: 100%;
 }
+.measurement-settings-card button {
+  cursor: pointer;
+}
+
 label.setting-label {
   font-size: 13px;
   font-weight: bold;
